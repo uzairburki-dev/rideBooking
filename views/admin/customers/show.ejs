@@ -1,19 +1,19 @@
 <div class="container py-4 my-md-2">
   
-  <!-- Back Action -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <a href="/admin/customers" class="btn btn-outline-secondary rounded-pill fw-semibold">
+  <!-- Back Action & Header -->
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-4 gap-3">
+    <a href="/admin/customers" class="btn btn-outline-secondary rounded-pill fw-semibold me-auto">
       <i class="fa-solid fa-arrow-left me-1"></i> Customer Management
     </a>
     
     <!-- Account Status Toggle Form -->
     <form action="/admin/customers/<%= customer._id %>/status" method="POST" class="d-inline">
       <% if (customer.isActive) { %>
-        <button type="submit" class="btn btn-outline-danger rounded-pill fw-bold" onclick="return confirm('Are you sure you want to deactivate this customer account?')">
+        <button type="submit" class="btn btn-outline-danger rounded-pill fw-bold w-100 w-sm-auto" onclick="return confirm('Are you sure you want to deactivate this customer account?')">
           <i class="fa-solid fa-user-xmark me-1"></i> Deactivate Customer Account
         </button>
       <% } else { %>
-        <button type="submit" class="btn btn-success rounded-pill fw-bold">
+        <button type="submit" class="btn btn-success rounded-pill fw-bold w-100 w-sm-auto">
           <i class="fa-solid fa-user-check me-1"></i> Activate Customer Account
         </button>
       <% } %>
@@ -21,24 +21,24 @@
   </div>
 
   <!-- Customer Overview Card -->
-  <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
-    <div class="card-header bg-dark text-white p-4 d-flex align-items-center justify-content-between">
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+    <div class="card-header bg-dark text-white p-4 d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3">
       <div class="d-flex align-items-center gap-3">
-        <div class="avatar-circle bg-info text-white fw-bold d-flex align-items-center justify-content-center rounded-circle" style="width: 55px; height: 55px;">
+        <div class="avatar-circle bg-info text-white fw-bold d-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="width: 50px; height: 50px;">
           <i class="fa-solid fa-user fs-4"></i>
         </div>
-        <div>
+        <div class="text-break">
           <h4 class="fw-bold text-white mb-0"><%= customer.fullName %></h4>
           <small class="text-white-80"><%= customer.email %></small>
         </div>
       </div>
       <div>
         <% if (customer.isActive) { %>
-          <span class="badge bg-success px-3 py-2 fs-6 rounded-pill fw-bold">
+          <span class="badge bg-success-subtle text-success px-3 py-2 fs-6 rounded-pill fw-bold">
             <i class="fa-solid fa-circle-check me-1"></i> Active
           </span>
         <% } else { %>
-          <span class="badge bg-danger px-3 py-2 fs-6 rounded-pill fw-bold">
+          <span class="badge bg-danger-subtle text-danger px-3 py-2 fs-6 rounded-pill fw-bold">
             <i class="fa-solid fa-ban me-1"></i> Inactive
           </span>
         <% } %>
@@ -47,21 +47,21 @@
 
     <div class="card-body p-4 p-md-5">
       
-      <!-- Metrics Grid -->
+      <!-- Metrics Grid (Responsive 2 cols on mobile, 4 on desktop) -->
       <div class="row g-3 p-3 bg-light rounded-4 border mb-4 text-center">
-        <div class="col-3">
+        <div class="col-6 col-sm-3">
           <span class="text-muted small fw-semibold d-block">Total Bookings</span>
           <h4 class="fw-bold text-dark mb-0"><%= stats.totalRides %></h4>
         </div>
-        <div class="col-3">
+        <div class="col-6 col-sm-3">
           <span class="text-muted small fw-semibold d-block">Completed Trips</span>
           <h4 class="fw-bold text-success mb-0"><%= stats.completedRides %></h4>
         </div>
-        <div class="col-3">
+        <div class="col-6 col-sm-3">
           <span class="text-muted small fw-semibold d-block">Cancelled Rides</span>
           <h4 class="fw-bold text-danger mb-0"><%= stats.cancelledRides %></h4>
         </div>
-        <div class="col-3">
+        <div class="col-6 col-sm-3">
           <span class="text-muted small fw-semibold d-block">Total Spending</span>
           <h4 class="fw-extrabold text-primary mb-0">Rs. <%= stats.totalSpent %></h4>
         </div>
@@ -70,15 +70,15 @@
       <!-- Contact Details -->
       <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">Account Details</h5>
       <div class="row g-3 mb-4 text-dark small">
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
           <span class="text-muted d-block">Phone Number</span>
           <strong class="font-monospace fs-6"><%= customer.phone %></strong>
         </div>
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
           <span class="text-muted d-block">Role</span>
-          <span class="badge bg-info text-white uppercase"><%= customer.role %></span>
+          <span class="badge bg-primary-subtle text-primary uppercase"><%= customer.role %></span>
         </div>
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
           <span class="text-muted d-block">Joined Date</span>
           <strong><%= new Date(customer.createdAt).toLocaleString() %></strong>
         </div>
@@ -87,7 +87,9 @@
       <!-- Customer Ride Log -->
       <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">Ride History Log</h5>
       <% if (rides && rides.length > 0) { %>
-        <div class="table-responsive">
+        
+        <!-- DESKTOP TABLE VIEW -->
+        <div class="table-responsive d-none d-md-block">
           <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
               <tr>
@@ -110,7 +112,7 @@
                   <td class="fw-semibold text-dark"><%= (r.driver && r.driver.user) ? r.driver.user.fullName : 'Unassigned' %></td>
                   <td class="fw-bold text-success">Rs. <%= r.fare %></td>
                   <td>
-                    <span class="badge <%= r.status === 'completed' ? 'bg-success' : r.status === 'cancelled' ? 'bg-danger' : 'bg-warning text-dark' %>">
+                    <span class="badge <%= r.status === 'completed' ? 'bg-success-subtle text-success' : r.status === 'cancelled' ? 'bg-danger-subtle text-danger' : 'bg-warning-subtle text-warning-emphasis' %>">
                       <%= r.status %>
                     </span>
                   </td>
@@ -122,6 +124,29 @@
             </tbody>
           </table>
         </div>
+
+        <!-- MOBILE CARD VIEW -->
+        <div class="d-block d-md-none">
+          <% rides.forEach(function(r) { %>
+            <div class="card border rounded-3 p-3 mb-2 bg-white">
+              <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                <span class="fw-bold font-monospace text-primary small"><%= r.bookingId %></span>
+                <span class="badge <%= r.status === 'completed' ? 'bg-success-subtle text-success' : r.status === 'cancelled' ? 'bg-danger-subtle text-danger' : 'bg-warning-subtle text-warning-emphasis' %>">
+                  <%= r.status %>
+                </span>
+              </div>
+              <div class="mb-2">
+                <div class="small text-muted mb-1"><i class="fa-solid fa-circle text-success me-1 fs-8"></i> <%= r.pickup.address %></div>
+                <div class="small text-dark fw-semibold"><i class="fa-solid fa-location-dot text-danger me-1 fs-8"></i> <%= r.destination.address %></div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-2">
+                <strong class="text-success small">Rs. <%= r.fare %></strong>
+                <a href="/admin/rides/<%= r._id %>" class="btn btn-outline-primary btn-sm rounded-pill px-3">Inspect</a>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+
       <% } else { %>
         <div class="text-center py-4 text-muted small">This customer has not booked any rides yet.</div>
       <% } %>

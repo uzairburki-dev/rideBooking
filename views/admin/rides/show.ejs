@@ -6,19 +6,19 @@
     </a>
   </div>
 
-  <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
-    <div class="card-header bg-dark text-white p-4 d-flex align-items-center justify-content-between">
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+    <div class="card-header bg-dark text-white p-4 d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 border-0">
       <div>
         <span class="text-warning small font-monospace d-block">System Booking Inspection</span>
-        <h3 class="fw-bold text-white mb-0 font-monospace"><%= ride.bookingId %></h3>
+        <h3 class="fw-bold text-white mb-0 font-monospace text-break"><%= ride.bookingId %></h3>
       </div>
       <div>
         <% if (ride.status === 'completed') { %>
-          <span class="badge bg-success px-3 py-2 fs-6 rounded-pill">Completed</span>
+          <span class="badge bg-success-subtle text-success px-3 py-2 fs-6 rounded-pill fw-bold">Completed</span>
         <% } else if (ride.status === 'cancelled') { %>
-          <span class="badge bg-danger px-3 py-2 fs-6 rounded-pill">Cancelled</span>
+          <span class="badge bg-danger-subtle text-danger px-3 py-2 fs-6 rounded-pill fw-bold">Cancelled</span>
         <% } else { %>
-          <span class="badge bg-info text-white px-3 py-2 fs-6 rounded-pill uppercase"><%= ride.status %></span>
+          <span class="badge bg-info-subtle text-info px-3 py-2 fs-6 rounded-pill uppercase fw-bold"><%= ride.status %></span>
         <% } %>
       </div>
     </div>
@@ -27,13 +27,13 @@
       
       <!-- Route & Specs Split -->
       <div class="row g-3 mb-4">
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
           <div class="p-3 bg-light rounded-4 border h-100">
             <span class="text-success fw-bold small d-block mb-1"><i class="fa-solid fa-circle me-1"></i> PICKUP LOCATION</span>
             <strong class="text-dark"><%= ride.pickup.address %></strong>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
           <div class="p-3 bg-light rounded-4 border h-100">
             <span class="text-danger fw-bold small d-block mb-1"><i class="fa-solid fa-location-dot me-1"></i> DESTINATION</span>
             <strong class="text-dark"><%= ride.destination.address %></strong>
@@ -44,7 +44,7 @@
       <div class="row g-3 p-3 bg-light rounded-4 border mb-4 text-center">
         <div class="col-4">
           <span class="text-muted small fw-semibold d-block">Tier</span>
-          <span class="badge bg-primary text-white uppercase"><%= ride.rideType %></span>
+          <span class="badge bg-primary-subtle text-primary uppercase fw-bold"><%= ride.rideType %></span>
         </div>
         <div class="col-4">
           <span class="text-muted small fw-semibold d-block">Distance</span>
@@ -59,13 +59,13 @@
       <!-- Parties Split -->
       <div class="row g-4 mb-4">
         <!-- Customer Info -->
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
           <div class="p-4 bg-light rounded-4 border h-100">
             <h6 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-user text-info me-2"></i> Passenger Details</h6>
             <% if (ride.customer) { %>
               <div class="small text-dark">
                 <div class="mb-2"><span class="text-muted">Name:</span> <strong><%= ride.customer.fullName %></strong></div>
-                <div class="mb-2"><span class="text-muted">Email:</span> <strong><%= ride.customer.email %></strong></div>
+                <div class="mb-2 text-break"><span class="text-muted">Email:</span> <strong><%= ride.customer.email %></strong></div>
                 <div class="mb-2"><span class="text-muted">Phone:</span> <strong class="font-monospace"><%= ride.customer.phone %></strong></div>
               </div>
             <% } %>
@@ -73,7 +73,7 @@
         </div>
 
         <!-- Driver Info -->
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
           <div class="p-4 bg-light rounded-4 border h-100">
             <h6 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-id-card-clip text-warning me-2"></i> Driver & Vehicle</h6>
             <% if (ride.driver && ride.driver.user) { %>
@@ -94,15 +94,15 @@
       <!-- Payment & Review Linked Info -->
       <div class="row g-4 mb-4">
         <!-- Payment Information -->
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
           <div class="p-4 bg-white border rounded-4 h-100">
             <h6 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-receipt text-success me-2"></i> Payment Record</h6>
             <% if (payment) { %>
               <div class="small text-dark">
-                <div class="mb-2"><span class="text-muted">Txn Ref:</span> <strong class="font-monospace text-primary"><%= payment.transactionReference %></strong></div>
+                <div class="mb-2 text-break"><span class="text-muted">Txn Ref:</span> <strong class="font-monospace text-primary"><%= payment.transactionReference %></strong></div>
                 <div class="mb-2"><span class="text-muted">Method:</span> <strong><%= payment.method %></strong></div>
                 <div class="mb-2"><span class="text-muted">Amount:</span> <strong class="text-success">Rs. <%= payment.amount %></strong></div>
-                <div class="mb-2"><span class="text-muted">Status:</span> <span class="badge <%= payment.status === 'paid' ? 'bg-success' : 'bg-warning text-dark' %>"><%= payment.status %></span></div>
+                <div class="mb-2"><span class="text-muted">Status:</span> <span class="badge <%= payment.status === 'paid' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning-emphasis' %>"><%= payment.status %></span></div>
               </div>
             <% } else { %>
               <div class="text-muted small">Ride payment is <strong class="text-warning">Pending</strong> (No transaction record created yet).</div>
@@ -111,12 +111,12 @@
         </div>
 
         <!-- Review Information -->
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
           <div class="p-4 bg-white border rounded-4 h-100">
             <h6 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-star text-warning me-2"></i> Rating & Review</h6>
             <% if (review) { %>
               <div class="small text-dark">
-                <div class="mb-2"><span class="text-muted">Rating Given:</span> <span class="badge bg-warning text-dark"><i class="fa-solid fa-star"></i> <%= review.rating %> / 5</span></div>
+                <div class="mb-2"><span class="text-muted">Rating Given:</span> <span class="badge bg-warning-subtle text-warning-emphasis"><i class="fa-solid fa-star"></i> <%= review.rating %> / 5</span></div>
                 <div class="mb-2"><span class="text-muted">Comment:</span> <em>"<%= review.comment || 'No comment provided' %>"</em></div>
               </div>
             <% } else { %>
