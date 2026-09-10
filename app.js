@@ -67,13 +67,19 @@ app.use(express.urlencoded({ extended: true }));
 // Method Override Middleware for RESTful actions
 app.use(methodOverride('_method'));
 
-// Session Configuration with MongoStore fallback
+// Trust reverse proxy (Vercel / Heroku / Nginx) in production
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
+// Session Configuration with MongoStore
 const sessionConfig = {
   secret: process.env.SESSION_SECRET || 'ridego_default_secret_key',
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
+    secure: process.env.COOKIE_SECURE === 'true',
     maxAge: 1000 * 60 * 60 * 24 // 1 day
   }
 };
