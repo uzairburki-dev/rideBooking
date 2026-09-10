@@ -1,0 +1,87 @@
+<div class="container py-4 my-md-2">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-extrabold text-dark mb-1">Available Ride Requests</h3>
+      <p class="text-muted mb-0">Accept a request to start driving and earning</p>
+    </div>
+    <a href="/driver/dashboard" class="btn btn-outline-secondary rounded-pill fw-semibold">
+      <i class="fa-solid fa-arrow-left me-1"></i> Back to Dashboard
+    </a>
+  </div>
+
+  <% if (requests && requests.length > 0) { %>
+    <div class="row g-4">
+      <% requests.forEach(function(reqItem) { %>
+        <div class="col-md-6 col-lg-4">
+          <div class="card border-0 shadow-lg rounded-4 overflow-hidden h-100">
+            
+            <div class="card-header bg-dark text-white p-3 d-flex justify-content-between align-items-center">
+              <span class="badge bg-primary uppercase fw-bold"><%= reqItem.rideType %></span>
+              <span class="font-monospace text-warning fw-bold"><%= reqItem.bookingId %></span>
+            </div>
+
+            <div class="card-body p-4">
+              
+              <div class="d-flex justify-content-between align-items-center mb-3 p-3 bg-light rounded-3">
+                <span class="text-muted small fw-semibold">Estimated Fare</span>
+                <h3 class="fw-extrabold text-success mb-0">Rs. <%= reqItem.fare %></h3>
+              </div>
+
+              <!-- Pickup -->
+              <div class="mb-2">
+                <span class="text-muted small fw-semibold d-block">Pickup Location</span>
+                <span class="fw-semibold text-dark">
+                  <i class="fa-solid fa-circle text-success me-1"></i> <%= reqItem.pickup.address %>
+                </span>
+              </div>
+
+              <!-- Destination -->
+              <div class="mb-3">
+                <span class="text-muted small fw-semibold d-block">Destination</span>
+                <span class="fw-semibold text-dark">
+                  <i class="fa-solid fa-location-dot text-danger me-1"></i> <%= reqItem.destination.address %>
+                </span>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center text-muted small border-top pt-3">
+                <span><i class="fa-solid fa-route me-1"></i> <%= reqItem.distance %> KM</span>
+                <span><i class="fa-solid fa-clock me-1"></i> <%= new Date(reqItem.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %></span>
+              </div>
+
+            </div>
+
+            <div class="card-footer bg-light p-3 border-0 d-flex justify-content-between gap-2">
+              <form action="/driver/rides/<%= reqItem._id %>/reject" method="POST" class="w-50">
+                <button type="submit" class="btn btn-outline-secondary w-100 rounded-pill fw-semibold btn-sm py-2">
+                  Reject
+                </button>
+              </form>
+              <form action="/driver/rides/<%= reqItem._id %>/accept" method="POST" class="w-50">
+                <button type="submit" class="btn btn-warning text-dark w-100 rounded-pill fw-bold btn-sm py-2 shadow-sm">
+                  Accept Ride
+                </button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  <% } else { %>
+    <!-- Empty State -->
+    <div class="card border-0 shadow-lg rounded-4 text-center p-5">
+      <div class="max-w-600 mx-auto py-4">
+        <div class="icon-box-lg bg-light text-warning rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+          <i class="fa-solid fa-radar display-4"></i>
+        </div>
+        <h4 class="fw-bold text-dark mb-2">No ride requests available</h4>
+        <p class="text-muted mb-4">Stay online to receive new incoming ride requests in real time.</p>
+        <a href="/driver/dashboard" class="btn btn-primary rounded-pill px-5 fw-bold">
+          Return to Console
+        </a>
+      </div>
+    </div>
+  <% } %>
+
+</div>

@@ -1,0 +1,92 @@
+<div class="container py-4 my-md-2">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+
+      <!-- Main Success Card -->
+      <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4 text-center">
+        
+        <div class="card-header bg-success text-white p-4 p-md-5">
+          <div class="icon-box bg-white text-success rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center shadow" style="width: 72px; height: 72px;">
+            <i class="fa-solid fa-check display-5"></i>
+          </div>
+          <span class="badge bg-white text-success fw-bold uppercase px-3 py-2 rounded-pill mb-2">Payment Completed</span>
+          <h2 class="fw-extrabold text-white mb-1">Payment Successful!</h2>
+          <p class="text-white-80 mb-0">Thank you. Your ride payment has been processed successfully.</p>
+        </div>
+
+        <div class="card-body p-4 p-md-5 text-start">
+
+          <!-- TRANSACTION DETAILS BOX -->
+          <div class="p-4 bg-light rounded-4 border mb-4">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+              <div>
+                <span class="text-muted small fw-bold uppercase d-block">Transaction Reference</span>
+                <h5 class="fw-bold font-monospace text-primary mb-0"><%= payment.transactionReference %></h5>
+              </div>
+              <span class="badge bg-success px-3 py-2 rounded-pill fs-6 fw-bold">
+                <i class="fa-solid fa-circle-check me-1"></i> PAID
+              </span>
+            </div>
+
+            <div class="row g-3 small text-dark">
+              <div class="col-6 col-md-3">
+                <span class="text-muted d-block">Amount Paid</span>
+                <strong class="text-success fs-5">Rs. <%= payment.amount %></strong>
+              </div>
+              <div class="col-6 col-md-3">
+                <span class="text-muted d-block">Payment Method</span>
+                <strong class="text-dark"><%= payment.method %></strong>
+              </div>
+              <div class="col-6 col-md-3">
+                <span class="text-muted d-block">Booking Reference</span>
+                <strong class="font-monospace text-primary"><%= ride ? ride.bookingId : 'N/A' %></strong>
+              </div>
+              <div class="col-6 col-md-3">
+                <span class="text-muted d-block">Paid Date & Time</span>
+                <strong class="text-dark"><%= payment.paidAt ? new Date(payment.paidAt).toLocaleString() : new Date(payment.createdAt).toLocaleString() %></strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIDE DETAILS SUMMARY -->
+          <% if (ride) { %>
+            <div class="p-4 bg-white border rounded-4 mb-4">
+              <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-taxi text-primary me-2"></i> Associated Trip Details</h6>
+              
+              <div class="row g-3 text-dark small">
+                <div class="col-md-6">
+                  <span class="text-muted d-block">Pickup Location</span>
+                  <strong><i class="fa-solid fa-circle text-success me-1"></i> <%= ride.pickup.address %></strong>
+                </div>
+                <div class="col-md-6">
+                  <span class="text-muted d-block">Destination</span>
+                  <strong><i class="fa-solid fa-location-dot text-danger me-1"></i> <%= ride.destination.address %></strong>
+                </div>
+                <div class="col-md-6">
+                  <span class="text-muted d-block">Assigned Driver</span>
+                  <strong><%= (ride.driver && ride.driver.user) ? ride.driver.user.fullName : 'Driver' %></strong>
+                </div>
+                <div class="col-md-6">
+                  <span class="text-muted d-block">Ride Type & Distance</span>
+                  <strong><%= ride.rideType %> &bull; <%= ride.distance %> KM</strong>
+                </div>
+              </div>
+            </div>
+          <% } %>
+
+          <!-- ACTION BUTTONS -->
+          <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 pt-2">
+            <a href="/customer/rides/<%= ride ? ride._id : '' %>" class="btn btn-primary rounded-pill px-4 py-2 fw-bold">
+              <i class="fa-solid fa-route me-1"></i> View Ride Details
+            </a>
+            <a href="/customer/payments" class="btn btn-outline-secondary rounded-pill px-4 py-2 fw-semibold">
+              <i class="fa-solid fa-receipt me-1"></i> My Payment History
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

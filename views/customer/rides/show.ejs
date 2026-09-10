@@ -1,0 +1,240 @@
+<div class="container py-4 my-md-2">
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      
+      <!-- Top Actions Bar -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="/customer/rides" class="btn btn-outline-secondary rounded-pill fw-semibold">
+          <i class="fa-solid fa-arrow-left me-1"></i> Back to My Rides
+        </a>
+        
+        <!-- Cancel Ride Button (Eligible Statuses) -->
+        <% if (['requested', 'accepted', 'driver_arriving'].includes(ride.status)) { %>
+          <button type="button" class="btn btn-outline-danger rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#cancelModal">
+            <i class="fa-solid fa-ban me-1"></i> Cancel Ride
+          </button>
+        <% } %>
+      </div>
+
+      <!-- Main Ride Card -->
+      <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+        
+        <!-- Header -->
+        <div class="card-header bg-dark text-white p-4 d-flex align-items-center justify-content-between">
+          <div>
+            <span class="text-warning small font-monospace d-block">Booking Reference</span>
+            <h3 class="fw-extrabold mb-0 text-white"><%= ride.bookingId %></h3>
+          </div>
+          <div>
+            <% if (ride.status === 'requested') { %>
+              <span class="badge bg-warning text-dark px-3 py-2 fs-6 rounded-pill">
+                <i class="fa-solid fa-spinner fa-spin me-1"></i> Searching for Driver
+              </span>
+            <% } else if (ride.status === 'completed') { %>
+              <span class="badge bg-success px-3 py-2 fs-6 rounded-pill">
+                <i class="fa-solid fa-circle-check me-1"></i> Completed
+              </span>
+            <% } else if (ride.status === 'cancelled') { %>
+              <span class="badge bg-danger px-3 py-2 fs-6 rounded-pill">
+                <i class="fa-solid fa-ban me-1"></i> Cancelled
+              </span>
+            <% } else { %>
+              <span class="badge bg-info text-white px-3 py-2 fs-6 rounded-pill uppercase fw-bold">
+                <i class="fa-solid fa-route me-1"></i> <%= ride.status.replace('_', ' ') %>
+              </span>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+          
+          <!-- LIVE STATUS PIPELINE -->
+          <div class="mb-4 p-3 bg-light rounded-4 border text-center">
+            <h6 class="text-muted small fw-bold mb-2 uppercase">Ride Status Tracker</h6>
+            <div class="d-flex justify-content-between align-items-center position-relative px-3">
+              <span class="badge <%= ['requested', 'accepted', 'driver_arriving', 'driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary' : 'bg-secondary' %>">1. Requested</span>
+              <span class="badge <%= ['accepted', 'driver_arriving', 'driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary' : 'bg-secondary' %>">2. Driver Assigned</span>
+              <span class="badge <%= ['driver_arriving', 'driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary' : 'bg-secondary' %>">3. Driver En Route</span>
+              <span class="badge <%= ['driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary' : 'bg-secondary' %>">4. Driver Arrived</span>
+              <span class="badge <%= ['started', 'completed'].includes(ride.status) ? 'bg-success' : 'bg-secondary' %>">5. On Trip</span>
+            </div>
+          </div>
+
+          <!-- Route Overview Cards -->
+          <div class="row g-3 mb-4">
+            <!-- Pickup -->
+            <div class="col-md-6">
+              <div class="p-3 bg-light rounded-4 border h-100">
+                <div class="text-success fw-bold small mb-1">
+                  <i class="fa-solid fa-circle me-1"></i> PICKUP LOCATION
+                </div>
+                <h6 class="fw-bold text-dark mb-0"><%= ride.pickup.address %></h6>
+              </div>
+            </div>
+
+            <!-- Destination -->
+            <div class="col-md-6">
+              <div class="p-3 bg-light rounded-4 border h-100">
+                <div class="text-danger fw-bold small mb-1">
+                  <i class="fa-solid fa-location-dot me-1"></i> DESTINATION
+                </div>
+                <h6 class="fw-bold text-dark mb-0"><%= ride.destination.address %></h6>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fare & Specs Grid -->
+          <div class="row g-3 p-3 bg-light rounded-4 border mb-4 text-center">
+            <div class="col-4">
+              <span class="text-muted small fw-semibold d-block">Tier</span>
+              <span class="badge bg-primary text-white uppercase fw-bold"><%= ride.rideType %></span>
+            </div>
+            <div class="col-4">
+              <span class="text-muted small fw-semibold d-block">Distance</span>
+              <span class="fw-bold text-dark"><%= ride.distance %> KM</span>
+            </div>
+            <div class="col-4">
+              <span class="text-muted small fw-semibold d-block">Total Fare</span>
+              <span class="fw-extrabold text-success fs-5">Rs. <%= ride.fare %></span>
+            </div>
+          </div>
+
+          <!-- Driver Assignment Information -->
+          <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">
+            <i class="fa-solid fa-id-card text-primary me-2"></i> Assigned Driver & Vehicle Details
+          </h5>
+
+          <% if (ride.driver && ride.driver.user) { %>
+            <div class="p-4 bg-light rounded-4 border">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="avatar-circle bg-dark text-white fw-bold d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
+                    <i class="fa-solid fa-user-tie fs-4"></i>
+                  </div>
+                  <div>
+                    <h5 class="fw-bold text-dark mb-0"><%= ride.driver.user.fullName %></h5>
+                    <div class="text-warning small fw-bold">
+                      <i class="fa-solid fa-star"></i> <%= ride.driver.rating ? ride.driver.rating.toFixed(1) : '5.0' %> Driver Rating
+                    </div>
+                  </div>
+                </div>
+                <a href="tel:<%= ride.driver.user.phone %>" class="btn btn-outline-success rounded-pill fw-bold">
+                  <i class="fa-solid fa-phone me-1"></i> <%= ride.driver.user.phone %>
+                </a>
+              </div>
+
+              <% if (ride.driver.vehicle) { %>
+                <div class="row g-2 pt-3 border-top text-dark small">
+                  <div class="col-md-4">
+                    <span class="text-muted d-block">Vehicle Make & Model</span>
+                    <strong><%= ride.driver.vehicle.brand %> <%= ride.driver.vehicle.model %> (<%= ride.driver.vehicle.year %>)</strong>
+                  </div>
+                  <div class="col-md-4">
+                    <span class="text-muted d-block">License Plate / Reg</span>
+                    <strong class="font-monospace text-primary fs-6"><%= ride.driver.vehicle.registrationNumber %></strong>
+                  </div>
+                  <div class="col-md-4">
+                    <span class="text-muted d-block">Color & Capacity</span>
+                    <strong><%= ride.driver.vehicle.color %>, <%= ride.driver.vehicle.seats %> Seats</strong>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+          <% } else { %>
+            <!-- Driver Finding Placeholder -->
+            <div class="p-4 bg-light rounded-4 border text-center">
+              <div class="spinner-border text-primary mb-2" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <h6 class="fw-bold text-dark mb-1">Finding an available driver...</h6>
+              <p class="text-muted small mb-0">Our dispatch system is searching for nearby top-rated drivers. Driver details will appear here once matched.</p>
+            </div>
+          <% } %>
+
+          <% if (ride.status === 'cancelled') { %>
+            <div class="alert alert-danger border-0 rounded-4 mt-4 mb-0">
+              <h6 class="fw-bold mb-1"><i class="fa-solid fa-ban me-2"></i> Ride Cancelled</h6>
+              <span class="small">Reason: <%= ride.cancelReason || 'Cancelled by customer' %></span>
+            </div>
+          <% } %>
+
+          <!-- CUSTOMER RATING & REVIEW SECTION (Completed Rides) -->
+          <% if (ride.status === 'completed' && ride.driver) { %>
+            <div class="mt-4 pt-3 border-top">
+              <% if (typeof review !== 'undefined' && review) { %>
+                <div class="card border-0 bg-warning-subtle text-dark rounded-4 p-4">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="fw-bold text-dark mb-0"><i class="fa-solid fa-star text-warning me-2"></i> Your Driver Rating & Feedback</h6>
+                    <small class="text-muted"><%= new Date(review.createdAt).toLocaleDateString() %></small>
+                  </div>
+                  <div class="mb-2">
+                    <%- include('../../partials/rating', { rating: review.rating }) %>
+                  </div>
+                  <% if (review.comment) { %>
+                    <p class="mb-0 text-dark small bg-white p-3 rounded-3 border">
+                      <i class="fa-solid fa-quote-left text-muted me-1 opacity-50"></i> <%= review.comment %>
+                    </p>
+                  <% } else { %>
+                    <span class="fst-italic text-muted small">No written comment submitted.</span>
+                  <% } %>
+                </div>
+              <% } else { %>
+                <div class="card border-warning border-2 bg-light rounded-4 p-4 text-center">
+                  <div class="brand-icon-box bg-warning text-dark rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <i class="fa-solid fa-star fs-4"></i>
+                  </div>
+                  <h5 class="fw-bold text-dark mb-1">How was your trip with <%= ride.driver.user ? ride.driver.user.fullName : 'your driver' %>?</h5>
+                  <p class="text-muted small mb-3">Your feedback helps us maintain high quality service and reward top drivers.</p>
+                  <div>
+                    <a href="/customer/rides/<%= ride._id %>/rating" class="btn btn-warning rounded-pill fw-bold px-4 py-2 text-dark shadow-sm">
+                      <i class="fa-solid fa-star me-1"></i> Rate Driver & Trip
+                    </a>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+          <% } %>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CANCEL RIDE CONFIRMATION MODAL -->
+<% if (['requested', 'accepted', 'driver_arriving'].includes(ride.status)) { %>
+  <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0 shadow">
+        
+        <div class="modal-header border-0 bg-danger text-white">
+          <h5 class="modal-title fw-bold" id="cancelModalLabel"><i class="fa-solid fa-triangle-exclamation me-2"></i> Cancel Ride Booking?</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form action="/customer/rides/<%= ride._id %>/cancel" method="POST">
+          <div class="modal-body p-4">
+            <p class="text-dark mb-3">Are you sure you want to cancel booking <strong><%= ride.bookingId %></strong>?</p>
+            
+            <div class="mb-3">
+              <label for="cancelReason" class="form-label fw-semibold text-dark small">Reason for cancellation (optional)</label>
+              <select class="form-select bg-light" name="cancelReason" id="cancelReason">
+                <option value="Changed my mind">Changed my mind</option>
+                <option value="Wait time too long">Wait time too long</option>
+                <option value="Booked by mistake">Booked by mistake</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-footer border-0 bg-light">
+            <button type="button" class="btn btn-secondary rounded-pill fw-semibold" data-bs-dismiss="modal">Keep Ride</button>
+            <button type="submit" class="btn btn-danger rounded-pill fw-bold px-4">Confirm Cancellation</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+<% } %>

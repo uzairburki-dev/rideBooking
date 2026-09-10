@@ -1,0 +1,174 @@
+<div class="container py-4 my-md-2">
+  
+  <!-- Header -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+      <h3 class="fw-extrabold text-dark mb-1">My Booking History</h3>
+      <p class="text-muted mb-0">View and track all your RideGo trips</p>
+    </div>
+    <a href="/customer/rides/new" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm">
+      <i class="fa-solid fa-taxi me-2"></i> Book New Ride
+    </a>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-body p-2">
+      <ul class="nav nav-pills gap-2 flex-wrap">
+        <li class="nav-item">
+          <a class="nav-link rounded-pill px-4 fw-semibold <%= currentFilter === 'all' ? 'active' : '' %>" href="/customer/rides?status=all">
+            All Rides
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link rounded-pill px-4 fw-semibold <%= currentFilter === 'active' ? 'active' : '' %>" href="/customer/rides?status=active">
+            Active
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link rounded-pill px-4 fw-semibold <%= currentFilter === 'completed' ? 'active' : '' %>" href="/customer/rides?status=completed">
+            Completed
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link rounded-pill px-4 fw-semibold <%= currentFilter === 'cancelled' ? 'active' : '' %>" href="/customer/rides?status=cancelled">
+            Cancelled
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Booking List -->
+  <% if (rides && rides.length > 0) { %>
+    
+    <!-- DESKTOP TABLE VIEW -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden d-none d-md-block">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th scope="col" class="py-3 ps-4">Booking ID</th>
+              <th scope="col" class="py-3">Pickup & Destination</th>
+              <th scope="col" class="py-3">Tier</th>
+              <th scope="col" class="py-3">Distance & Fare</th>
+              <th scope="col" class="py-3">Status</th>
+              <th scope="col" class="py-3">Date</th>
+              <th scope="col" class="py-3 pe-4 text-end">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% rides.forEach(function(ride) { %>
+              <tr>
+                <!-- Booking ID -->
+                <td class="ps-4">
+                  <span class="fw-bold font-monospace text-primary d-block"><%= ride.bookingId %></span>
+                </td>
+
+                <!-- Route -->
+                <td style="max-width: 250px;">
+                  <div class="d-flex flex-column gap-1">
+                    <span class="text-truncate text-dark fw-semibold small">
+                      <i class="fa-solid fa-circle text-success me-1"></i> <%= ride.pickup.address %>
+                    </span>
+                    <span class="text-truncate text-dark fw-semibold small">
+                      <i class="fa-solid fa-location-dot text-danger me-1"></i> <%= ride.destination.address %>
+                    </span>
+                  </div>
+                </td>
+
+                <!-- Tier -->
+                <td>
+                  <span class="badge bg-primary-subtle text-primary fw-bold uppercase"><%= ride.rideType %></span>
+                </td>
+
+                <!-- Distance & Fare -->
+                <td>
+                  <div class="fw-bold text-dark">Rs. <%= ride.fare %></div>
+                  <small class="text-muted"><%= ride.distance %> KM</small>
+                </td>
+
+                <!-- Status Badge -->
+                <td>
+                  <% if (ride.status === 'requested') { %>
+                    <span class="badge bg-warning-subtle text-warning-emphasis"><i class="fa-solid fa-clock me-1"></i> Requested</span>
+                  <% } else if (ride.status === 'completed') { %>
+                    <span class="badge bg-success-subtle text-success"><i class="fa-solid fa-circle-check me-1"></i> Completed</span>
+                  <% } else if (ride.status === 'cancelled') { %>
+                    <span class="badge bg-danger-subtle text-danger"><i class="fa-solid fa-ban me-1"></i> Cancelled</span>
+                  <% } else { %>
+                    <span class="badge bg-info-subtle text-info"><i class="fa-solid fa-spinner me-1"></i> In Progress</span>
+                  <% } %>
+                </td>
+
+                <!-- Date -->
+                <td>
+                  <small class="text-muted"><%= new Date(ride.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></small>
+                </td>
+
+                <!-- Action Button -->
+                <td class="pe-4 text-end">
+                  <a href="/customer/rides/<%= ride._id %>" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-semibold">
+                    View Details
+                  </a>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- MOBILE CARD LIST -->
+    <div class="d-block d-md-none">
+      <% rides.forEach(function(ride) { %>
+        <div class="card border-0 shadow-sm rounded-4 mb-3 p-3 bg-white">
+          <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+            <span class="fw-bold font-monospace text-primary small"><%= ride.bookingId %></span>
+            <% if (ride.status === 'requested') { %>
+              <span class="badge bg-warning-subtle text-warning-emphasis"><i class="fa-solid fa-clock me-1"></i> Requested</span>
+            <% } else if (ride.status === 'completed') { %>
+              <span class="badge bg-success-subtle text-success"><i class="fa-solid fa-circle-check me-1"></i> Completed</span>
+            <% } else if (ride.status === 'cancelled') { %>
+              <span class="badge bg-danger-subtle text-danger"><i class="fa-solid fa-ban me-1"></i> Cancelled</span>
+            <% } else { %>
+              <span class="badge bg-info-subtle text-info"><i class="fa-solid fa-spinner me-1"></i> In Progress</span>
+            <% } %>
+          </div>
+
+          <div class="mb-3">
+            <div class="small text-muted mb-1"><i class="fa-solid fa-circle text-success me-1"></i> <%= ride.pickup.address %></div>
+            <div class="small text-dark fw-semibold"><i class="fa-solid fa-location-dot text-danger me-1"></i> <%= ride.destination.address %></div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <div>
+              <span class="badge bg-primary-subtle text-primary uppercase me-1"><%= ride.rideType %></span>
+              <span class="fw-bold text-dark me-2">Rs. <%= ride.fare %></span>
+              <small class="text-muted">(<%= ride.distance %> KM)</small>
+            </div>
+            <a href="/customer/rides/<%= ride._id %>" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-semibold">
+              View
+            </a>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+
+  <% } else { %>
+    <!-- Empty State -->
+    <div class="card border-0 shadow-sm rounded-4 text-center p-5">
+      <div class="max-w-600 mx-auto py-4">
+        <div class="icon-box-lg bg-light text-primary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+          <i class="fa-solid fa-route display-4"></i>
+        </div>
+        <h4 class="fw-bold text-dark mb-2">No Rides Found</h4>
+        <p class="text-muted mb-4">Start your journey with RideGo by booking your first ride now.</p>
+        <a href="/customer/rides/new" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow-sm">
+          <i class="fa-solid fa-taxi me-2"></i> Book Your First Ride
+        </a>
+      </div>
+    </div>
+  <% } %>
+
+</div>

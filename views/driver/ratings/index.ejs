@@ -1,0 +1,110 @@
+<div class="container py-4 my-md-2">
+  
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-extrabold text-dark mb-1">Customer Ratings & Reviews</h3>
+      <p class="text-muted mb-0">Track customer feedback, rating metrics, and reviews</p>
+    </div>
+    <a href="/driver/dashboard" class="btn btn-outline-secondary rounded-pill fw-semibold">
+      <i class="fa-solid fa-arrow-left me-1"></i> Dashboard
+    </a>
+  </div>
+
+  <!-- Overall Score & Breakdown Card -->
+  <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+    <div class="card-body p-4 p-md-5">
+      <div class="row align-items-center g-4">
+        
+        <!-- Left: Big Overall Score -->
+        <div class="col-md-4 text-center border-end-md">
+          <div class="p-3">
+            <span class="text-muted small fw-bold uppercase d-block mb-1">Overall Driver Score</span>
+            <h1 class="display-3 fw-extrabold text-dark mb-1">
+              <%= typeof averageRating === 'number' ? averageRating.toFixed(1) : averageRating %>
+            </h1>
+            <div class="mb-2">
+              <%- include('../../partials/rating', { rating: averageRating }) %>
+            </div>
+            <p class="text-muted small mb-0">
+              Based on <strong><%= totalRatings %></strong> customer <%= totalRatings === 1 ? 'rating' : 'ratings' %>
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: 5★ to 1★ Progress Bar Breakdown -->
+        <div class="col-md-8">
+          <h6 class="fw-bold text-dark mb-3">Rating Breakdown</h6>
+          
+          <% [5, 4, 3, 2, 1].forEach(function(star) { %>
+            <% const item = breakdown[star] || { count: 0, pct: 0 }; %>
+            <div class="d-flex align-items-center mb-2">
+              <span class="fw-semibold text-dark me-2 small" style="width: 50px;"><%= star %> <i class="fa-solid fa-star text-warning"></i></span>
+              <div class="progress flex-grow-1 me-3 rounded-pill" style="height: 10px;">
+                <div 
+                  class="progress-bar bg-warning" 
+                  role="progressbar" 
+                  style="width: <%= item.pct %>%;" 
+                  aria-valuenow="<%= item.pct %>" 
+                  aria-valuemin="0" 
+                  aria-valuemax="100"></div>
+              </div>
+              <span class="text-muted small fw-semibold" style="width: 85px;"><%= item.count %> (<%= item.pct %>%)</span>
+            </div>
+          <% }); %>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Reviews List Card -->
+  <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+    <div class="card-header bg-dark text-white p-3 fw-bold border-0 d-flex justify-content-between align-items-center">
+      <span><i class="fa-solid fa-comments text-warning me-2"></i> Customer Feedback History</span>
+      <span class="badge bg-secondary rounded-pill"><%= reviews.length %> Reviews</span>
+    </div>
+
+    <div class="card-body p-0">
+      <% if (reviews && reviews.length > 0) { %>
+        <div class="list-group list-group-flush">
+          <% reviews.forEach(function(review) { %>
+            <div class="list-group-item p-4">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="avatar-circle bg-warning-subtle text-warning-emphasis fw-bold rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                    <i class="fa-solid fa-user"></i>
+                  </div>
+                  <div>
+                    <h6 class="fw-bold text-dark mb-0"><%= review.customer ? review.customer.fullName : 'Verified Customer' %></h6>
+                    <small class="text-muted">Booking: <span class="font-monospace text-primary fw-semibold"><%= review.ride ? review.ride.bookingId : 'N/A' %></span></small>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <div><%- include('../../partials/rating', { rating: review.rating }) %></div>
+                  <small class="text-muted d-block mt-1"><%= new Date(review.createdAt).toLocaleDateString() %></small>
+                </div>
+              </div>
+
+              <% if (review.comment) { %>
+                <div class="p-3 bg-light rounded-3 mt-2 border text-dark">
+                  <i class="fa-solid fa-quote-left text-muted me-1 opacity-50"></i> <%= review.comment %>
+                </div>
+              <% } else { %>
+                <span class="fst-italic text-muted small mt-1 d-block">No written comment provided.</span>
+              <% } %>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <!-- Empty State -->
+        <div class="text-center py-5">
+          <i class="fa-solid fa-star-half-stroke text-muted fs-1 mb-2 opacity-50"></i>
+          <h5 class="fw-bold text-dark mb-1">No ratings received yet</h5>
+          <p class="text-muted mb-0">Complete customer rides to build up your rating history.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+</div>

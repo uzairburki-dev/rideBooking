@@ -1,0 +1,148 @@
+<div class="container py-4 my-md-2">
+  
+  <!-- Back Action & Controls Header -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <a href="/admin/drivers" class="btn btn-outline-secondary rounded-pill fw-semibold">
+      <i class="fa-solid fa-arrow-left me-1"></i> Driver Management
+    </a>
+
+    <div class="d-flex gap-2">
+      <!-- Approval Action Buttons -->
+      <% if (!driver.isApproved) { %>
+        <form action="/admin/drivers/<%= driver._id %>/approve" method="POST" class="d-inline">
+          <button type="submit" class="btn btn-success rounded-pill fw-bold">
+            <i class="fa-solid fa-check me-1"></i> Approve Driver
+          </button>
+        </form>
+      <% } %>
+
+      <!-- Account Status Toggle Form -->
+      <% if (user) { %>
+        <form action="/admin/drivers/<%= driver._id %>/status" method="POST" class="d-inline">
+          <% if (user.isActive) { %>
+            <button type="submit" class="btn btn-outline-danger rounded-pill fw-bold" onclick="return confirm('Deactivate this driver account?')">
+              <i class="fa-solid fa-user-xmark me-1"></i> Deactivate Driver Account
+            </button>
+          <% } else { %>
+            <button type="submit" class="btn btn-success rounded-pill fw-bold">
+              <i class="fa-solid fa-user-check me-1"></i> Activate Driver Account
+            </button>
+          <% } %>
+        </form>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Main Driver Profile Card -->
+  <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+    <div class="card-header bg-dark text-white p-4 d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-3">
+        <div class="avatar-circle bg-warning text-dark fw-bold d-flex align-items-center justify-content-center rounded-circle" style="width: 55px; height: 55px;">
+          <i class="fa-solid fa-id-card-clip fs-4"></i>
+        </div>
+        <div>
+          <h4 class="fw-bold text-white mb-0"><%= user ? user.fullName : 'Driver' %></h4>
+          <small class="text-warning">License No: <span class="font-monospace"><%= driver.licenseNumber %></span></small>
+        </div>
+      </div>
+      <div class="d-flex gap-2">
+        <% if (driver.isApproved || driver.approvalStatus === 'approved') { %>
+          <span class="badge bg-success px-3 py-2 fs-6 rounded-pill fw-bold">Approved</span>
+        <% } else if (driver.approvalStatus === 'rejected') { %>
+          <span class="badge bg-danger px-3 py-2 fs-6 rounded-pill fw-bold">Rejected</span>
+        <% } else { %>
+          <span class="badge bg-warning text-dark px-3 py-2 fs-6 rounded-pill fw-bold">Pending Approval</span>
+        <% } %>
+
+        <% if (user && !user.isActive) { %>
+          <span class="badge bg-secondary px-3 py-2 fs-6 rounded-pill fw-bold">Account Inactive</span>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="card-body p-4 p-md-5">
+      
+      <!-- Metrics Grid -->
+      <div class="row g-3 p-3 bg-light rounded-4 border mb-4 text-center">
+        <div class="col-6 col-md-3">
+          <span class="text-muted small fw-semibold d-block">Completed Trips</span>
+          <h4 class="fw-bold text-success mb-0"><%= stats.completedCount %></h4>
+        </div>
+        <div class="col-6 col-md-3">
+          <span class="text-muted small fw-semibold d-block">Total Revenue</span>
+          <h4 class="fw-extrabold text-primary mb-0">Rs. <%= stats.totalEarnings %></h4>
+        </div>
+        <div class="col-6 col-md-3">
+          <span class="text-muted small fw-semibold d-block">Driver Rating</span>
+          <h4 class="fw-bold text-dark mb-0"><i class="fa-solid fa-star text-warning"></i> <%= stats.rating ? stats.rating.toFixed(1) : '5.0' %></h4>
+        </div>
+        <div class="col-6 col-md-3">
+          <span class="text-muted small fw-semibold d-block">Total Ratings</span>
+          <h4 class="fw-bold text-dark mb-0"><%= stats.totalRatings || 0 %></h4>
+        </div>
+      </div>
+
+      <!-- Driver & Vehicle Information Split -->
+      <div class="row g-4 mb-4">
+        <!-- Personal Info -->
+        <div class="col-md-6">
+          <div class="p-4 bg-light rounded-4 border h-100">
+            <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">
+              <i class="fa-solid fa-user text-primary me-2"></i> Driver Account Details
+            </h6>
+            <div class="small text-dark">
+              <div class="mb-2"><span class="text-muted">Full Name:</span> <strong><%= user ? user.fullName : '' %></strong></div>
+              <div class="mb-2"><span class="text-muted">Email:</span> <strong><%= user ? user.email : '' %></strong></div>
+              <div class="mb-2"><span class="text-muted">Phone:</span> <strong class="font-monospace"><%= user ? user.phone : '' %></strong></div>
+              <div class="mb-2"><span class="text-muted">Online Status:</span> <span class="badge <%= driver.driverStatus === 'online' ? 'bg-success' : 'bg-secondary' %>"><%= driver.driverStatus %></span></div>
+              <% if (driver.rejectionReason) { %>
+                <div class="alert alert-danger border-0 rounded-3 mt-2 p-2 small">
+                  <strong>Rejection Note:</strong> <%= driver.rejectionReason %>
+                </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vehicle Info -->
+        <div class="col-md-6">
+          <div class="p-4 bg-light rounded-4 border h-100">
+            <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">
+              <i class="fa-solid fa-car text-warning me-2"></i> Registered Vehicle Info
+            </h6>
+            <% if (vehicle) { %>
+              <div class="small text-dark">
+                <div class="mb-2"><span class="text-muted">Vehicle Tier:</span> <span class="badge bg-primary uppercase"><%= vehicle.vehicleType %></span></div>
+                <div class="mb-2"><span class="text-muted">Brand & Model:</span> <strong><%= vehicle.brand %> <%= vehicle.model %> (<%= vehicle.year %>)</strong></div>
+                <div class="mb-2"><span class="text-muted">Registration Plate:</span> <strong class="font-monospace text-primary fs-6"><%= vehicle.registrationNumber %></strong></div>
+                <div class="mb-2"><span class="text-muted">Color & Capacity:</span> <strong><%= vehicle.color %>, <%= vehicle.seats %> Seats</strong></div>
+              </div>
+            <% } else { %>
+              <div class="text-center py-4 text-muted small">No vehicle details registered yet.</div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer Reviews Log -->
+      <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">Customer Reviews (<%= reviews.length %>)</h5>
+      <% if (reviews && reviews.length > 0) { %>
+        <div class="list-group list-group-flush mb-4">
+          <% reviews.forEach(function(rev) { %>
+            <div class="list-group-item p-3">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <strong class="text-dark"><%= rev.customer ? rev.customer.fullName : 'Customer' %></strong>
+                <span class="badge bg-warning text-dark"><i class="fa-solid fa-star"></i> <%= rev.rating %> / 5</span>
+              </div>
+              <p class="text-muted small mb-0"><%= rev.comment || 'No comment provided.' %></p>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <div class="text-center py-4 text-muted small mb-4">No reviews recorded for this driver.</div>
+      <% } %>
+
+    </div>
+  </div>
+
+</div>

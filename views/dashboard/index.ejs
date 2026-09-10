@@ -1,0 +1,283 @@
+<div class="dashboard-wrapper container-fluid p-0">
+  <div class="row g-0 min-vh-100">
+    
+    <!-- DASHBOARD SIDEBAR -->
+    <aside class="col-lg-2 bg-dark text-white p-3 dashboard-sidebar d-flex flex-column" id="dashboardSidebar">
+      <!-- Sidebar Brand Header -->
+      <div class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom border-secondary opacity-75">
+        <a href="/" class="d-flex align-items-center gap-2 text-white text-decoration-none">
+          <div class="brand-icon-box bg-primary text-white rounded-3 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+            <i class="fa-solid fa-car-side"></i>
+          </div>
+          <span class="fw-bold fs-5">Ride<span class="text-primary">Go</span></span>
+        </a>
+        <button class="btn btn-sm btn-outline-secondary text-white d-lg-none" id="closeSidebarBtn" aria-label="Close sidebar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Navigation Menu -->
+      <ul class="nav nav-pills flex-column mb-auto dashboard-nav gap-1">
+        <li class="nav-item">
+          <a href="/dashboard" class="nav-link active bg-primary text-white d-flex align-items-center gap-3 rounded-3 px-3 py-2 fw-semibold">
+            <i class="fa-solid fa-chart-line"></i> Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link text-secondary-emphasis text-white-80 d-flex align-items-center gap-3 rounded-3 px-3 py-2 fw-semibold hover-bg-dark-subtle" onclick="alert('My Rides placeholder (Phase 1)'); return false;">
+            <i class="fa-solid fa-clock-history"></i> My Rides
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link text-secondary-emphasis text-white-80 d-flex align-items-center gap-3 rounded-3 px-3 py-2 fw-semibold hover-bg-dark-subtle" onclick="alert('Book a Ride UI interactive modal will be available in Phase 2.'); return false;">
+            <i class="fa-solid fa-taxi text-warning"></i> Book a Ride
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link text-secondary-emphasis text-white-80 d-flex align-items-center gap-3 rounded-3 px-3 py-2 fw-semibold hover-bg-dark-subtle" onclick="alert('Profile management placeholder (Phase 1)'); return false;">
+            <i class="fa-solid fa-user-gear"></i> Profile
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link text-secondary-emphasis text-white-80 d-flex align-items-center gap-3 rounded-3 px-3 py-2 fw-semibold hover-bg-dark-subtle" onclick="alert('Settings placeholder (Phase 1)'); return false;">
+            <i class="fa-solid fa-sliders"></i> Settings
+          </a>
+        </li>
+      </ul>
+
+      <!-- Sidebar Footer User Profile -->
+      <div class="pt-3 mt-auto border-top border-secondary opacity-75">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <img src="<%= user.avatar %>" alt="User Avatar" class="rounded-circle object-fit-cover" width="40" height="40">
+          <div class="overflow-hidden">
+            <h6 class="mb-0 text-white fw-bold text-truncate"><%= user.name %></h6>
+            <span class="badge bg-primary-subtle text-primary small px-2 py-0"><%= user.role %></span>
+          </div>
+        </div>
+        <a href="/login" class="btn btn-outline-danger btn-sm w-100 rounded-pill fw-semibold">
+          <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
+        </a>
+      </div>
+    </aside>
+
+    <!-- DASHBOARD MAIN CONTENT AREA -->
+    <main class="col-lg-10 bg-light p-3 p-md-4 dashboard-main">
+      
+      <!-- Top Bar Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded-4 shadow-sm">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-primary d-lg-none" id="openSidebarBtn" aria-label="Open sidebar">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div>
+            <h4 class="fw-bold text-dark mb-0">Welcome back, <%= user.name %>! 👋</h4>
+            <small class="text-muted">Here is your RideGo activity overview.</small>
+          </div>
+        </div>
+        
+        <div class="d-flex align-items-center gap-3">
+          <div class="dropdown">
+            <button class="btn btn-light rounded-circle position-relative p-2" type="button" aria-label="Notifications">
+              <i class="fa-solid fa-bell text-muted fs-5"></i>
+              <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+            </button>
+          </div>
+          <div class="d-none d-sm-block text-end">
+            <span class="fw-semibold d-block text-dark small"><%= user.name %></span>
+            <small class="text-muted fs-8"><%= user.email %></small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Alert Banner -->
+      <div class="alert alert-info border-0 shadow-sm rounded-4 d-flex align-items-center gap-3 mb-4">
+        <i class="fa-solid fa-circle-info fs-3 text-info"></i>
+        <div>
+          <strong class="d-block text-dark">Phase 1 Dashboard UI Active</strong>
+          <span class="small text-muted">This is the foundation layout for Customer, Driver, and Admin dashboards. Real-time booking data will be connected in future phases.</span>
+        </div>
+      </div>
+
+      <!-- Statistics Cards Row -->
+      <div class="row g-3 mb-4">
+        
+        <div class="col-sm-6 col-xl-3">
+          <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                <span class="text-muted small fw-semibold d-block mb-1">Total Rides</span>
+                <h3 class="fw-bold text-dark mb-0">28</h3>
+              </div>
+              <div class="bg-primary-subtle text-primary p-3 rounded-4">
+                <i class="fa-solid fa-car-side fs-4"></i>
+              </div>
+            </div>
+            <div class="mt-3 small text-success fw-semibold">
+              <i class="fa-solid fa-arrow-trend-up me-1"></i> +12% from last month
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+          <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                <span class="text-muted small fw-semibold d-block mb-1">Active Bookings</span>
+                <h3 class="fw-bold text-dark mb-0">1</h3>
+              </div>
+              <div class="bg-warning-subtle text-warning-emphasis p-3 rounded-4">
+                <i class="fa-solid fa-spinner fs-4"></i>
+              </div>
+            </div>
+            <div class="mt-3 small text-muted fw-semibold">
+              <i class="fa-solid fa-circle-dot text-warning me-1"></i> Driver matching in progress
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+          <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                <span class="text-muted small fw-semibold d-block mb-1">Total Spent</span>
+                <h3 class="fw-bold text-dark mb-0">$425.50</h3>
+              </div>
+              <div class="bg-success-subtle text-success p-3 rounded-4">
+                <i class="fa-solid fa-wallet fs-4"></i>
+              </div>
+            </div>
+            <div class="mt-3 small text-success fw-semibold">
+              <i class="fa-solid fa-check me-1"></i> Payments up to date
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+          <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                <span class="text-muted small fw-semibold d-block mb-1">Saved Places</span>
+                <h3 class="fw-bold text-dark mb-0">4</h3>
+              </div>
+              <div class="bg-danger-subtle text-danger p-3 rounded-4">
+                <i class="fa-solid fa-heart fs-4"></i>
+              </div>
+            </div>
+            <div class="mt-3 small text-muted fw-semibold">
+              <i class="fa-solid fa-house me-1"></i> Home, Work, Gym, Airport
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Ride Action & Recent Activity Grid -->
+      <div class="row g-4 mb-4">
+        
+        <!-- Book Ride Placeholder Widget -->
+        <div class="col-lg-6">
+          <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold text-dark mb-0"><i class="fa-solid fa-map-pin text-primary me-2"></i> Quick Book Ride</h5>
+              <span class="badge bg-success">Instant Match</span>
+            </div>
+            
+            <form onsubmit="event.preventDefault(); alert('Ride booking request created (Phase 1 UI Placeholder).');">
+              <div class="mb-3">
+                <label class="form-label text-muted small fw-semibold">Pickup Location</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light text-success"><i class="fa-solid fa-circle"></i></span>
+                  <input type="text" class="form-control bg-light" placeholder="Current Location or Enter Address" value="742 Evergreen Terrace">
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label text-muted small fw-semibold">Destination</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light text-danger"><i class="fa-solid fa-location-dot"></i></span>
+                  <input type="text" class="form-control bg-light" placeholder="Where to?">
+                </div>
+              </div>
+
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <select class="form-select bg-light fw-semibold">
+                    <option selected>Economy ($18-$22)</option>
+                    <option>Comfort ($25-$30)</option>
+                    <option>Premium ($40-$50)</option>
+                    <option>SUV ($50-$65)</option>
+                  </select>
+                </div>
+                <div class="col-6">
+                  <select class="form-select bg-light fw-semibold">
+                    <option selected>Cash / Wallet</option>
+                    <option>Credit Card (*4921)</option>
+                  </select>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3 fw-bold">
+                <i class="fa-solid fa-paper-plane me-2"></i> Request Ride Now
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Recent Activity Placeholder Table -->
+        <div class="col-lg-6">
+          <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold text-dark mb-0"><i class="fa-solid fa-clock-rotate-left text-primary me-2"></i> Recent Ride History</h5>
+              <a href="#" class="text-primary small text-decoration-none fw-semibold">View All</a>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col" class="small text-muted">Destination</th>
+                    <th scope="col" class="small text-muted">Type</th>
+                    <th scope="col" class="small text-muted">Fare</th>
+                    <th scope="col" class="small text-muted">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="fw-semibold text-dark">Downtown Station</div>
+                      <small class="text-muted">Sep 10, 2026</small>
+                    </td>
+                    <td><span class="badge bg-light text-dark border">Economy</span></td>
+                    <td class="fw-bold text-dark">$18.50</td>
+                    <td><span class="badge bg-success-subtle text-success">Completed</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="fw-semibold text-dark">City Airport Terminal 2</div>
+                      <small class="text-muted">Sep 08, 2026</small>
+                    </td>
+                    <td><span class="badge bg-light text-dark border">SUV</span></td>
+                    <td class="fw-bold text-dark">$54.00</td>
+                    <td><span class="badge bg-success-subtle text-success">Completed</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="fw-semibold text-dark">Metropolitan Plaza</div>
+                      <small class="text-muted">Sep 05, 2026</small>
+                    </td>
+                    <td><span class="badge bg-light text-dark border">Comfort</span></td>
+                    <td class="fw-bold text-dark">$26.00</td>
+                    <td><span class="badge bg-secondary-subtle text-secondary">Cancelled</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>

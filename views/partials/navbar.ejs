@@ -1,0 +1,129 @@
+<nav class="navbar navbar-expand-lg sticky-top navbar-ridego bg-white border-bottom shadow-sm">
+  <div class="container">
+    <!-- Brand Logo & Name -->
+    <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+      <div class="brand-icon-box bg-primary text-white rounded-3 d-flex align-items-center justify-content-center">
+        <i class="fa-solid fa-car-side"></i>
+      </div>
+      <div>
+        <span class="fw-bold fs-4 text-dark mb-0 lh-1 d-block">Ride<span class="text-primary">Go</span></span>
+        <small class="text-muted fs-8 d-none d-sm-block brand-tagline">Your Ride, Your Journey</small>
+      </div>
+    </a>
+
+    <!-- Mobile Toggle Button -->
+    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarRideGoContent" aria-controls="navbarRideGoContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navigation Links & Actions -->
+    <div class="collapse navbar-collapse" id="navbarRideGoContent">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold">
+        <li class="nav-item">
+          <a class="nav-link <%= currentPath === '/' ? 'active' : '' %>" href="/">
+            <i class="fa-solid fa-house me-1 text-primary-subtle"></i> Home
+          </a>
+        </li>
+
+        <% if (currentUser) { %>
+          <% if (currentUser.role === 'customer') { %>
+            <li class="nav-item">
+              <a class="nav-link <%= currentPath === '/customer/dashboard' ? 'active' : '' %>" href="/customer/dashboard">
+                <i class="fa-solid fa-gauge me-1 text-primary-subtle"></i> Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link <%= currentPath === '/customer/rides/new' ? 'active' : '' %>" href="/customer/rides/new">
+                <i class="fa-solid fa-taxi me-1 text-warning"></i> Book a Ride
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link <%= currentPath === '/customer/rides' ? 'active' : '' %>" href="/customer/rides">
+                <i class="fa-solid fa-clock-rotate-left me-1 text-primary-subtle"></i> My Rides
+              </a>
+            </li>
+          <% } else if (currentUser.role === 'driver') { %>
+            <li class="nav-item">
+              <a class="nav-link <%= currentPath.startsWith('/driver') ? 'active' : '' %>" href="/driver/dashboard">
+                <i class="fa-solid fa-gauge me-1 text-primary-subtle"></i> Driver Console
+              </a>
+            </li>
+          <% } else if (currentUser.role === 'admin') { %>
+            <li class="nav-item">
+              <a class="nav-link <%= currentPath.startsWith('/admin') ? 'active' : '' %>" href="/admin/dashboard">
+                <i class="fa-solid fa-user-shield me-1 text-primary-subtle"></i> Admin Panel
+              </a>
+            </li>
+          <% } %>
+          <li class="nav-item">
+            <a class="nav-link <%= currentPath === '/profile' ? 'active' : '' %>" href="/profile">
+              <i class="fa-solid fa-user me-1 text-primary-subtle"></i> Profile
+            </a>
+          </li>
+        <% } else { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/#about">
+              <i class="fa-solid fa-circle-info me-1 text-primary-subtle"></i> About
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/#contact">
+              <i class="fa-solid fa-envelope me-1 text-primary-subtle"></i> Contact
+            </a>
+          </li>
+        <% } %>
+      </ul>
+
+      <!-- User Session Actions -->
+      <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+        <% if (currentUser) { %>
+          <div class="dropdown me-2">
+            <button class="btn btn-light rounded-pill px-3 py-2 border d-flex align-items-center gap-2" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-circle-user text-primary fs-5"></i>
+              <span class="fw-semibold text-dark small"><%= currentUser.fullName %></span>
+              <span class="badge bg-primary-subtle text-primary uppercase fs-8"><%= currentUser.role %></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm rounded-3 border-0 mt-2" aria-labelledby="userDropdown">
+              <li>
+                <a class="dropdown-item py-2" href="/profile">
+                  <i class="fa-solid fa-id-card me-2 text-muted"></i> My Profile
+                </a>
+              </li>
+              <% if (currentUser.role === 'customer') { %>
+                <li>
+                  <a class="dropdown-item py-2" href="/customer/rides/new">
+                    <i class="fa-solid fa-taxi me-2 text-warning"></i> Book a Ride
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item py-2" href="/customer/rides">
+                    <i class="fa-solid fa-clock-rotate-left me-2 text-muted"></i> My Rides
+                  </a>
+                </li>
+              <% } %>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form action="/logout" method="POST" class="d-inline">
+                  <button type="submit" class="dropdown-item py-2 text-danger fw-semibold">
+                    <i class="fa-solid fa-right-from-bracket me-2"></i> Sign Out
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </div>
+        <% } else { %>
+          <a href="/login" class="btn btn-outline-secondary px-3 rounded-pill fw-semibold <%= currentPath === '/login' ? 'active' : '' %>">
+            <i class="fa-solid fa-right-to-bracket me-1"></i> Login
+          </a>
+          <a href="/register" class="btn btn-outline-primary px-3 rounded-pill fw-semibold <%= currentPath === '/register' ? 'active' : '' %>">
+            <i class="fa-solid fa-user-plus me-1"></i> Register
+          </a>
+          <a href="/driver/register" class="btn btn-primary px-3 rounded-pill fw-semibold shadow-sm ms-lg-1 btn-cta">
+            <i class="fa-solid fa-taxi me-1"></i> Drive With Us
+          </a>
+        <% } %>
+      </div>
+
+    </div>
+  </div>
+</nav>

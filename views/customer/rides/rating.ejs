@@ -1,0 +1,159 @@
+<div class="container py-4 my-md-2">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      
+      <!-- Back Action -->
+      <div class="mb-4">
+        <a href="/customer/rides/<%= ride._id %>" class="btn btn-outline-secondary rounded-pill fw-semibold">
+          <i class="fa-solid fa-arrow-left me-1"></i> Back to Ride Details
+        </a>
+      </div>
+
+      <!-- Main Rating Form Card -->
+      <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+        <div class="card-header bg-dark text-white p-4 text-center">
+          <div class="brand-icon-box bg-warning text-dark rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center" style="width: 54px; height: 54px;">
+            <i class="fa-solid fa-star fs-3"></i>
+          </div>
+          <h3 class="fw-bold text-white mb-1">Rate Your Driver</h3>
+          <p class="text-white-80 small mb-0">Booking Ref: <strong class="font-monospace text-warning"><%= ride.bookingId %></strong></p>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+          
+          <!-- Ride & Driver Summary -->
+          <div class="p-3 bg-light rounded-4 border mb-4">
+            <div class="d-flex align-items-center gap-3">
+              <div class="avatar-circle bg-dark text-white fw-bold d-flex align-items-center justify-content-center rounded-circle" style="width: 50px; height: 50px;">
+                <i class="fa-solid fa-user-tie fs-4"></i>
+              </div>
+              <div>
+                <h5 class="fw-bold text-dark mb-0"><%= (ride.driver && ride.driver.user) ? ride.driver.user.fullName : 'Driver' %></h5>
+                <% if (ride.driver && ride.driver.vehicle) { %>
+                  <small class="text-muted"><%= ride.driver.vehicle.brand %> <%= ride.driver.vehicle.model %> &bull; <span class="font-monospace text-primary fw-semibold"><%= ride.driver.vehicle.registrationNumber %></span></small>
+                <% } %>
+              </div>
+            </div>
+            <hr class="my-3 opacity-25">
+            <div class="row g-2 text-center small text-muted">
+              <div class="col-6">
+                <span>Trip Distance:</span> <strong class="text-dark"><%= ride.distance %> KM</strong>
+              </div>
+              <div class="col-6">
+                <span>Total Paid:</span> <strong class="text-success">Rs. <%= ride.fare %></strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- RATING FORM -->
+          <form action="/customer/rides/<%= ride._id %>/rating" method="POST" id="ratingForm">
+            
+            <!-- Star Selection -->
+            <div class="text-center mb-4">
+              <label class="form-label fw-bold text-dark fs-5 mb-2 d-block">How was your overall experience?</label>
+              
+              <div class="star-rating-select d-inline-flex flex-row-reverse justify-content-center gap-2 py-2 fs-2">
+                <input type="radio" id="star5" name="rating" value="5" required />
+                <label for="star5" title="5 Stars - Excellent"><i class="fa-solid fa-star"></i></label>
+                
+                <input type="radio" id="star4" name="rating" value="4" />
+                <label for="star4" title="4 Stars - Very Good"><i class="fa-solid fa-star"></i></label>
+                
+                <input type="radio" id="star3" name="rating" value="3" />
+                <label for="star3" title="3 Stars - Good"><i class="fa-solid fa-star"></i></label>
+                
+                <input type="radio" id="star2" name="rating" value="2" />
+                <label for="star2" title="2 Stars - Fair"><i class="fa-solid fa-star"></i></label>
+                
+                <input type="radio" id="star1" name="rating" value="1" />
+                <label for="star1" title="1 Star - Poor"><i class="fa-solid fa-star"></i></label>
+              </div>
+
+              <div id="ratingText" class="text-muted fw-semibold small mt-1">Select a rating from 1 to 5 stars</div>
+            </div>
+
+            <!-- Review Comment Textarea -->
+            <div class="mb-4">
+              <label for="comment" class="form-label fw-semibold text-dark">
+                Leave a Comment or Feedback <span class="text-muted fw-normal">(optional, max 500 chars)</span>
+              </label>
+              <textarea 
+                class="form-control rounded-3 bg-light border p-3" 
+                id="comment" 
+                name="comment" 
+                rows="4" 
+                maxlength="500" 
+                placeholder="Share your thoughts about driver timeliness, vehicle cleanliness, route safety, or friendliness..."></textarea>
+              <div class="form-text text-end small" id="charCount">0 / 500 characters</div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-warning btn-lg rounded-pill fw-bold text-dark py-3 shadow-sm">
+                <i class="fa-solid fa-paper-plane me-2"></i> Submit Rating & Review
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Inline CSS & JS for Interactive Star Selection -->
+<style>
+  .star-rating-select {
+    direction: rtl;
+  }
+  .star-rating-select input[type="radio"] {
+    display: none;
+  }
+  .star-rating-select label {
+    color: #e4e5e9;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out, transform 0.15s ease;
+  }
+  .star-rating-select label:hover,
+  .star-rating-select label:hover ~ label,
+  .star-rating-select input[type="radio"]:checked ~ label {
+    color: #ffc107;
+  }
+  .star-rating-select label:hover {
+    transform: scale(1.2);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const radios = document.querySelectorAll('.star-rating-select input[type="radio"]');
+    const ratingText = document.getElementById('ratingText');
+    const commentTextarea = document.getElementById('comment');
+    const charCount = document.getElementById('charCount');
+
+    const labels = {
+      1: '⭐ 1 Star — Poor',
+      2: '⭐⭐ 2 Stars — Fair',
+      3: '⭐⭐⭐ 3 Stars — Good',
+      4: '⭐⭐⭐⭐ 4 Stars — Very Good',
+      5: '⭐⭐⭐⭐⭐ 5 Stars — Excellent!'
+    };
+
+    radios.forEach(radio => {
+      radio.addEventListener('change', function () {
+        if (labels[this.value]) {
+          ratingText.textContent = labels[this.value];
+          ratingText.className = 'text-warning fw-bold fs-6 mt-1';
+        }
+      });
+    });
+
+    if (commentTextarea) {
+      commentTextarea.addEventListener('input', function () {
+        charCount.textContent = `${this.value.length} / 500 characters`;
+      });
+    }
+  });
+</script>

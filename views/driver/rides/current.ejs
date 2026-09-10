@@ -1,0 +1,168 @@
+<div class="container py-4 my-md-2">
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-extrabold text-dark mb-0">Current Active Ride</h3>
+        <a href="/driver/dashboard" class="btn btn-outline-secondary rounded-pill fw-semibold">
+          <i class="fa-solid fa-arrow-left me-1"></i> Dashboard
+        </a>
+      </div>
+
+      <% if (ride) { %>
+        <!-- ACTIVE RIDE MANAGEMENT CARD -->
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+          
+          <!-- Header -->
+          <div class="card-header bg-dark text-white p-4 d-flex justify-content-between align-items-center border-0">
+            <div>
+              <span class="text-warning small font-monospace d-block">Booking Reference</span>
+              <h3 class="fw-extrabold mb-0 text-white"><%= ride.bookingId %></h3>
+            </div>
+            <span class="badge bg-warning text-dark px-3 py-2 fs-6 rounded-pill uppercase fw-bold">
+              <%= ride.status.replace('_', ' ') %>
+            </span>
+          </div>
+
+          <div class="card-body p-4 p-md-5">
+
+            <!-- STATUS PROGRESSION PIPELINE -->
+            <div class="mb-5">
+              <h6 class="text-muted small fw-bold mb-3 uppercase tracking-wider">Trip Progression Pipeline</h6>
+              <div class="row text-center g-2">
+                <div class="col-3">
+                  <div class="p-2 rounded-3 <%= ['accepted', 'driver_arriving', 'driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary text-white' : 'bg-light text-muted' %>">
+                    <i class="fa-solid fa-check-circle d-block mb-1"></i>
+                    <small class="fw-bold fs-8">Accepted</small>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="p-2 rounded-3 <%= ['driver_arriving', 'driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary text-white' : 'bg-light text-muted' %>">
+                    <i class="fa-solid fa-car-side d-block mb-1"></i>
+                    <small class="fw-bold fs-8">En Route</small>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="p-2 rounded-3 <%= ['driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary text-white' : 'bg-light text-muted' %>">
+                    <i class="fa-solid fa-street-view d-block mb-1"></i>
+                    <small class="fw-bold fs-8">Arrived</small>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="p-2 rounded-3 <%= ['started', 'completed'].includes(ride.status) ? 'bg-success text-white' : 'bg-light text-muted' %>">
+                    <i class="fa-solid fa-flag-checkered d-block mb-1"></i>
+                    <small class="fw-bold fs-8">Started</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- CUSTOMER CONTACT CARD -->
+            <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">
+              <i class="fa-solid fa-user-circle text-primary me-2"></i> Passenger Information
+            </h5>
+
+            <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-4 border mb-4">
+              <div class="d-flex align-items-center gap-3">
+                <div class="avatar-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                  <i class="fa-solid fa-user"></i>
+                </div>
+                <div>
+                  <h5 class="fw-bold text-dark mb-0"><%= ride.customer ? ride.customer.fullName : 'Passenger' %></h5>
+                  <small class="text-muted"><i class="fa-solid fa-phone me-1"></i> <%= ride.customer ? ride.customer.phone : 'N/A' %></small>
+                </div>
+              </div>
+              <a href="tel:<%= ride.customer ? ride.customer.phone : '' %>" class="btn btn-outline-success rounded-pill fw-bold">
+                <i class="fa-solid fa-phone me-1"></i> Call Rider
+              </a>
+            </div>
+
+            <!-- ROUTE CARDS -->
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <div class="p-3 bg-light rounded-4 border h-100">
+                  <div class="text-success fw-bold small mb-1"><i class="fa-solid fa-circle me-1"></i> PICKUP</div>
+                  <h6 class="fw-bold text-dark mb-0"><%= ride.pickup.address %></h6>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 bg-light rounded-4 border h-100">
+                  <div class="text-danger fw-bold small mb-1"><i class="fa-solid fa-location-dot me-1"></i> DESTINATION</div>
+                  <h6 class="fw-bold text-dark mb-0"><%= ride.destination.address %></h6>
+                </div>
+              </div>
+            </div>
+
+            <!-- FARE & METRICS -->
+            <div class="row g-3 p-3 bg-light rounded-4 border mb-4 text-center">
+              <div class="col-4">
+                <span class="text-muted small fw-semibold d-block">Tier</span>
+                <span class="badge bg-primary text-white uppercase fw-bold"><%= ride.rideType %></span>
+              </div>
+              <div class="col-4">
+                <span class="text-muted small fw-semibold d-block">Distance</span>
+                <span class="fw-bold text-dark"><%= ride.distance %> KM</span>
+              </div>
+              <div class="col-4">
+                <span class="text-muted small fw-semibold d-block">Total Fare</span>
+                <span class="fw-extrabold text-success fs-5">Rs. <%= ride.fare %></span>
+              </div>
+            </div>
+
+            <!-- OPERATIONAL ACTION BUTTONS -->
+            <div class="p-3 bg-dark text-white rounded-4 text-center">
+              <h6 class="text-warning fw-bold mb-3">Update Operational Trip Status</h6>
+
+              <% if (ride.status === 'accepted') { %>
+                <form action="/driver/rides/<%= ride._id %>/status" method="POST">
+                  <input type="hidden" name="targetStatus" value="driver_arriving">
+                  <button type="submit" class="btn btn-warning btn-lg rounded-pill fw-bold px-5 py-3 w-100 shadow">
+                    <i class="fa-solid fa-car-side me-2"></i> I'm On My Way
+                  </button>
+                </form>
+              <% } else if (ride.status === 'driver_arriving') { %>
+                <form action="/driver/rides/<%= ride._id %>/status" method="POST">
+                  <input type="hidden" name="targetStatus" value="driver_arrived">
+                  <button type="submit" class="btn btn-info text-white btn-lg rounded-pill fw-bold px-5 py-3 w-100 shadow">
+                    <i class="fa-solid fa-street-view me-2"></i> I've Arrived at Pickup
+                  </button>
+                </form>
+              <% } else if (ride.status === 'driver_arrived') { %>
+                <form action="/driver/rides/<%= ride._id %>/status" method="POST">
+                  <input type="hidden" name="targetStatus" value="started">
+                  <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold px-5 py-3 w-100 shadow">
+                    <i class="fa-solid fa-play me-2"></i> Start Ride
+                  </button>
+                </form>
+              <% } else if (ride.status === 'started') { %>
+                <form action="/driver/rides/<%= ride._id %>/status" method="POST">
+                  <input type="hidden" name="targetStatus" value="completed">
+                  <button type="submit" class="btn btn-success btn-lg rounded-pill fw-bold px-5 py-3 w-100 shadow">
+                    <i class="fa-solid fa-flag-checkered me-2"></i> Complete Ride & Collect Rs. <%= ride.fare %>
+                  </button>
+                </form>
+              <% } %>
+            </div>
+
+          </div>
+
+        </div>
+      <% } else { %>
+        <!-- EMPTY STATE (No Active Ride) -->
+        <div class="card border-0 shadow-lg rounded-4 text-center p-5">
+          <div class="max-w-600 mx-auto py-4">
+            <div class="icon-box-lg bg-light text-primary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+              <i class="fa-solid fa-taxi display-4"></i>
+            </div>
+            <h4 class="fw-bold text-dark mb-2">No active ride</h4>
+            <p class="text-muted mb-4">You currently don't have an active ride assignment.</p>
+            <a href="/driver/rides/requests" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow-sm">
+              <i class="fa-solid fa-list-check me-2"></i> View Available Requests
+            </a>
+          </div>
+        </div>
+      <% } %>
+
+    </div>
+  </div>
+</div>

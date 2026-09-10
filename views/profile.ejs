@@ -1,0 +1,138 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      
+      <!-- User Profile Header Card -->
+      <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+        <div class="card-header bg-primary text-white p-4 d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center gap-3">
+            <div class="avatar-circle bg-white text-primary fw-bold fs-3 d-flex align-items-center justify-content-center" style="width: 65px; height: 65px;">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <div>
+              <h3 class="fw-bold mb-0 text-white"><%= user.fullName %></h3>
+              <span class="badge bg-warning text-dark uppercase fw-bold"><%= user.role %> Account</span>
+            </div>
+          </div>
+          <div>
+            <% if (user.isActive) { %>
+              <span class="badge bg-success-subtle text-light border border-light px-3 py-2 rounded-pill">
+                <i class="fa-solid fa-circle-check me-1"></i> Active Status
+              </span>
+            <% } else { %>
+              <span class="badge bg-danger px-3 py-2 rounded-pill">Inactive</span>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+          <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">
+            <i class="fa-solid fa-id-card text-primary me-2"></i> Account Details
+          </h5>
+
+          <div class="row g-3 text-dark">
+            <div class="col-md-6">
+              <span class="text-muted small fw-semibold d-block">Full Name</span>
+              <span class="fw-bold"><%= user.fullName %></span>
+            </div>
+            <div class="col-md-6">
+              <span class="text-muted small fw-semibold d-block">Email Address</span>
+              <span class="fw-bold"><%= user.email %></span>
+            </div>
+            <div class="col-md-6">
+              <span class="text-muted small fw-semibold d-block">Phone Number</span>
+              <span class="fw-bold"><%= user.phone %></span>
+            </div>
+            <div class="col-md-6">
+              <span class="text-muted small fw-semibold d-block">Member Since</span>
+              <span class="fw-bold"><%= new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- If User is a Driver: Driver & Vehicle Specs Card -->
+      <% if (user.role === 'driver' && driver) { %>
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+          <div class="card-header bg-dark text-white p-3 d-flex align-items-center justify-content-between">
+            <h5 class="fw-bold mb-0 text-white"><i class="fa-solid fa-taxi text-warning me-2"></i> Driver Credentials</h5>
+            <% if (driver.isApproved) { %>
+              <span class="badge bg-success"><i class="fa-solid fa-shield-check me-1"></i> Admin Approved</span>
+            <% } else { %>
+              <span class="badge bg-warning text-dark"><i class="fa-solid fa-clock me-1"></i> Pending Admin Approval</span>
+            <% } %>
+          </div>
+
+          <div class="card-body p-4">
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <span class="text-muted small fw-semibold d-block">License Number</span>
+                <span class="fw-bold font-monospace text-dark"><%= driver.licenseNumber %></span>
+              </div>
+              <div class="col-md-3">
+                <span class="text-muted small fw-semibold d-block">Driver Rating</span>
+                <span class="fw-bold text-warning"><i class="fa-solid fa-star"></i> <%= driver.rating.toFixed(1) %></span>
+              </div>
+              <div class="col-md-3">
+                <span class="text-muted small fw-semibold d-block">Driver Status</span>
+                <span class="badge bg-secondary uppercase"><%= driver.driverStatus %></span>
+              </div>
+            </div>
+
+            <% if (vehicle) { %>
+              <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">
+                <i class="fa-solid fa-car text-primary me-2"></i> Registered Vehicle Information
+              </h5>
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <span class="text-muted small fw-semibold d-block">Vehicle Class</span>
+                  <span class="badge bg-primary-subtle text-primary fw-bold fs-6"><%= vehicle.vehicleType %></span>
+                </div>
+                <div class="col-md-4">
+                  <span class="text-muted small fw-semibold d-block">Make & Model</span>
+                  <span class="fw-bold text-dark"><%= vehicle.brand %> <%= vehicle.model %> (<%= vehicle.year %>)</span>
+                </div>
+                <div class="col-md-4">
+                  <span class="text-muted small fw-semibold d-block">License Plate / Reg</span>
+                  <span class="fw-bold text-dark font-monospace"><%= vehicle.registrationNumber %></span>
+                </div>
+                <div class="col-md-4">
+                  <span class="text-muted small fw-semibold d-block">Vehicle Color</span>
+                  <span class="fw-bold text-dark"><%= vehicle.color %></span>
+                </div>
+                <div class="col-md-4">
+                  <span class="text-muted small fw-semibold d-block">Seats Capacity</span>
+                  <span class="fw-bold text-dark"><%= vehicle.seats %> passengers</span>
+                </div>
+              </div>
+            <% } %>
+
+          </div>
+        </div>
+      <% } %>
+
+      <div class="d-flex justify-content-between align-items-center">
+        <% if (user.role === 'customer') { %>
+          <a href="/customer/dashboard" class="btn btn-outline-primary rounded-pill fw-bold">
+            <i class="fa-solid fa-arrow-left me-1"></i> Back to Dashboard
+          </a>
+        <% } else if (user.role === 'driver') { %>
+          <a href="/driver/dashboard" class="btn btn-outline-primary rounded-pill fw-bold">
+            <i class="fa-solid fa-arrow-left me-1"></i> Back to Driver Dashboard
+          </a>
+        <% } else if (user.role === 'admin') { %>
+          <a href="/admin/dashboard" class="btn btn-outline-primary rounded-pill fw-bold">
+            <i class="fa-solid fa-arrow-left me-1"></i> Back to Admin Dashboard
+          </a>
+        <% } %>
+
+        <form action="/logout" method="POST" class="d-inline">
+          <button type="submit" class="btn btn-danger rounded-pill fw-bold px-4">
+            <i class="fa-solid fa-right-from-bracket me-1"></i> Log Out
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+<div class="container py-5 my-md-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-5">
+      
+      <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <!-- Auth Header -->
+        <div class="card-header bg-primary text-white text-center py-4 border-0">
+          <div class="brand-icon-box bg-white text-primary rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
+            <i class="fa-solid fa-right-to-bracket fs-4"></i>
+          </div>
+          <h3 class="fw-bold mb-1">Welcome Back</h3>
+          <p class="mb-0 text-white-80 small">Sign in to manage your rides and account</p>
+        </div>
+
+        <!-- Auth Body -->
+        <div class="card-body p-4 p-md-5">
+          <!-- Backend Form submitting to POST /login -->
+          <form action="/login" method="POST" id="loginForm">
+            
+            <!-- Email Input -->
+            <div class="mb-3">
+              <label for="email" class="form-label fw-semibold text-dark">Email Address</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-muted border-end-0"><i class="fa-solid fa-envelope"></i></span>
+                <input type="email" class="form-control bg-light border-start-0" id="email" name="email" placeholder="name@example.com" required>
+              </div>
+            </div>
+
+            <!-- Password Input with Toggle -->
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <label for="password" class="form-label fw-semibold text-dark mb-0">Password</label>
+                <span class="text-muted small">Forgot password?</span>
+              </div>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-muted border-end-0"><i class="fa-solid fa-lock"></i></span>
+                <input type="password" class="form-control bg-light border-start-0 border-end-0" id="password" name="password" placeholder="Enter your password" required>
+                <button type="button" class="btn btn-light border border-start-0 text-muted toggle-password" data-target="password" aria-label="Toggle password visibility">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Remember Me Checkbox -->
+            <div class="mb-4 form-check">
+              <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
+              <label class="form-check-label text-muted small" for="rememberMe">Remember me on this device</label>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-sm mb-3">
+              <i class="fa-solid fa-right-to-bracket me-2"></i> Sign In
+            </button>
+
+          </form>
+
+          <hr class="my-4 text-muted opacity-25">
+
+          <div class="text-center">
+            <p class="text-muted mb-2 small">Want to earn driving with RideGo?</p>
+            <a href="/driver/register" class="btn btn-outline-warning text-dark fw-bold btn-sm rounded-pill px-3">
+              <i class="fa-solid fa-taxi me-1 text-warning"></i> Register as a Driver
+            </a>
+          </div>
+        </div>
+
+        <!-- Auth Footer -->
+        <div class="card-footer bg-light border-0 py-3 text-center">
+          <p class="text-muted mb-0 small">
+            Don't have an account? <a href="/register" class="text-primary fw-bold text-decoration-none">Create Customer Account</a>
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

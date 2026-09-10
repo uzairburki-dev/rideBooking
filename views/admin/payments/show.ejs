@@ -1,0 +1,103 @@
+<div class="container py-4 my-md-2">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="/admin/payments" class="btn btn-outline-secondary rounded-pill fw-semibold">
+      <i class="fa-solid fa-arrow-left me-1"></i> Payment Log
+    </a>
+  </div>
+
+  <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+    <div class="card-header bg-dark text-white p-4 d-flex align-items-center justify-content-between">
+      <div>
+        <span class="text-warning small font-monospace d-block">Admin Payment Inspection</span>
+        <h4 class="fw-bold text-white mb-0 font-monospace"><%= payment.transactionReference %></h4>
+      </div>
+      <div>
+        <% if (payment.status === 'paid') { %>
+          <span class="badge bg-success px-3 py-2 fs-6 rounded-pill">PAID</span>
+        <% } else if (payment.status === 'pending') { %>
+          <span class="badge bg-warning text-dark px-3 py-2 fs-6 rounded-pill">PENDING</span>
+        <% } else { %>
+          <span class="badge bg-danger px-3 py-2 fs-6 rounded-pill uppercase"><%= payment.status %></span>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="card-body p-4 p-md-5">
+      
+      <!-- Transaction Detail Breakdown -->
+      <div class="p-4 bg-light rounded-4 border mb-4">
+        <h6 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-receipt text-primary me-2"></i> Transaction Details</h6>
+        
+        <div class="row g-3 text-dark small">
+          <div class="col-md-6">
+            <span class="text-muted d-block">Payment ID</span>
+            <strong class="font-monospace text-primary fs-6"><%= payment.paymentId %></strong>
+          </div>
+          <div class="col-md-6">
+            <span class="text-muted d-block">Transaction Reference</span>
+            <strong class="font-monospace text-dark fs-6"><%= payment.transactionReference %></strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block">Total Amount</span>
+            <strong class="text-success fs-4">Rs. <%= payment.amount %></strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block">Payment Method</span>
+            <strong class="text-dark"><%= payment.method %></strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block">Payment Status</span>
+            <strong class="uppercase <%= payment.status === 'paid' ? 'text-success' : 'text-warning' %>"><%= payment.status %></strong>
+          </div>
+          <div class="col-md-6">
+            <span class="text-muted d-block">Created At</span>
+            <strong><%= new Date(payment.createdAt).toLocaleString() %></strong>
+          </div>
+          <% if (payment.paidAt) { %>
+            <div class="col-md-6">
+              <span class="text-muted d-block">Settled / Paid At</span>
+              <strong><%= new Date(payment.paidAt).toLocaleString() %></strong>
+            </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Associated Ride & Parties -->
+      <div class="row g-4 mb-4">
+        <!-- Customer -->
+        <div class="col-md-6">
+          <div class="p-4 bg-white border rounded-4 h-100">
+            <h6 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-user text-info me-2"></i> Payer Customer Information</h6>
+            <% if (payment.customer) { %>
+              <div class="small text-dark">
+                <div class="mb-2"><span class="text-muted">Full Name:</span> <strong><%= payment.customer.fullName %></strong></div>
+                <div class="mb-2"><span class="text-muted">Email:</span> <strong><%= payment.customer.email %></strong></div>
+                <div class="mb-2"><span class="text-muted">Phone:</span> <strong class="font-monospace"><%= payment.customer.phone %></strong></div>
+              </div>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Ride Reference -->
+        <div class="col-md-6">
+          <div class="p-4 bg-white border rounded-4 h-100">
+            <h6 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-route text-warning me-2"></i> Linked Ride Booking</h6>
+            <% if (ride) { %>
+              <div class="small text-dark">
+                <div class="mb-2"><span class="text-muted">Booking Reference:</span> <strong class="font-monospace text-primary"><%= ride.bookingId %></strong></div>
+                <div class="mb-2"><span class="text-muted">Ride Tier & Distance:</span> <strong><%= ride.rideType %> &bull; <%= ride.distance %> KM</strong></div>
+                <div class="mb-2"><span class="text-muted">Pickup:</span> <strong><%= ride.pickup.address %></strong></div>
+                <div class="mb-2"><span class="text-muted">Destination:</span> <strong><%= ride.destination.address %></strong></div>
+              </div>
+            <% } else { %>
+              <div class="text-muted small">No ride record linked.</div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

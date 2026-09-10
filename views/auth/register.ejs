@@ -1,0 +1,113 @@
+<div class="container py-5 my-md-3">
+  <div class="row justify-content-center">
+    <div class="col-md-9 col-lg-7">
+      
+      <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <!-- Auth Header -->
+        <div class="card-header bg-primary text-white text-center py-4 border-0">
+          <div class="brand-icon-box bg-white text-primary rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
+            <i class="fa-solid fa-user-plus fs-4"></i>
+          </div>
+          <h3 class="fw-bold mb-1">Create Rider Account</h3>
+          <p class="mb-0 text-white-80 small">Sign up to book rides quickly and securely</p>
+        </div>
+
+        <!-- Auth Body -->
+        <div class="card-body p-4 p-md-5">
+          <!-- Backend Form submitting to POST /register -->
+          <form action="/register" method="POST" id="registerForm">
+            
+            <!-- Full Name Input -->
+            <div class="mb-3">
+              <label for="fullName" class="form-label fw-semibold text-dark">Full Name</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-muted border-end-0"><i class="fa-solid fa-user"></i></span>
+                <input type="text" class="form-control bg-light border-start-0" id="fullName" name="fullName" placeholder="John Doe" required>
+              </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <!-- Email Input -->
+              <div class="col-md-6">
+                <label for="regEmail" class="form-label fw-semibold text-dark">Email Address</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light text-muted border-end-0"><i class="fa-solid fa-envelope"></i></span>
+                  <input type="email" class="form-control bg-light border-start-0" id="regEmail" name="email" placeholder="name@example.com" required>
+                </div>
+              </div>
+              
+              <!-- Phone Input -->
+              <div class="col-md-6">
+                <label for="phone" class="form-label fw-semibold text-dark">Phone Number</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light text-muted border-end-0"><i class="fa-solid fa-phone"></i></span>
+                  <input type="tel" class="form-control bg-light border-start-0" id="phone" name="phone" placeholder="+1 (555) 000-0000" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <!-- Password Input -->
+              <div class="col-md-6">
+                <label for="regPassword" class="form-label fw-semibold text-dark">Password</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light text-muted border-end-0"><i class="fa-solid fa-lock"></i></span>
+                  <input type="password" class="form-control bg-light border-start-0 border-end-0" id="regPassword" name="password" placeholder="Min. 6 chars" required minlength="6">
+                  <button type="button" class="btn btn-light border border-start-0 text-muted toggle-password" data-target="regPassword" aria-label="Toggle password visibility">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Confirm Password Input -->
+              <div class="col-md-6">
+                <label for="confirmPassword" class="form-label fw-semibold text-dark">Confirm Password</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light text-muted border-end-0"><i class="fa-solid fa-shield-halved"></i></span>
+                  <input type="password" class="form-control bg-light border-start-0 border-end-0" id="confirmPassword" name="confirmPassword" placeholder="Re-enter password" required minlength="6">
+                  <button type="button" class="btn btn-light border border-start-0 text-muted toggle-password" data-target="confirmPassword" aria-label="Toggle password visibility">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Terms & Conditions Checkbox -->
+            <div class="mb-4 form-check">
+              <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+              <label class="form-check-label text-muted small" for="terms">
+                I agree to the Terms of Service and Privacy Policy
+              </label>
+            </div>
+
+            <!-- Register Button -->
+            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-sm mb-3">
+              <i class="fa-solid fa-user-check me-2"></i> Register Customer Account
+            </button>
+
+          </form>
+
+          <hr class="my-4 text-muted opacity-25">
+
+          <div class="p-3 bg-light rounded-3 text-center">
+            <p class="text-dark fw-bold mb-1">Are you a professional driver?</p>
+            <p class="text-muted small mb-2">Register your vehicle and join the RideGo driver network to start earning.</p>
+            <a href="/driver/register" class="btn btn-warning text-dark fw-bold px-4 rounded-pill">
+              <i class="fa-solid fa-taxi me-1"></i> Register as a Driver Instead
+            </a>
+          </div>
+
+        </div>
+
+        <!-- Auth Footer -->
+        <div class="card-footer bg-light border-0 py-3 text-center">
+          <p class="text-muted mb-0 small">
+            Already have an account? <a href="/login" class="text-primary fw-bold text-decoration-none">Sign In</a>
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

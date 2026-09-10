@@ -1,0 +1,132 @@
+<div class="container py-4 my-md-2">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+
+      <!-- Back Action -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="/customer/payments" class="btn btn-outline-secondary rounded-pill fw-semibold">
+          <i class="fa-solid fa-arrow-left me-1"></i> Payment History
+        </a>
+        <% if (ride) { %>
+          <a href="/customer/rides/<%= ride._id %>" class="btn btn-outline-primary rounded-pill fw-semibold">
+            View Ride <i class="fa-solid fa-arrow-right ms-1"></i>
+          </a>
+        <% } %>
+      </div>
+
+      <!-- Main Receipt Card -->
+      <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+        <div class="card-header bg-dark text-white p-4 d-flex align-items-center justify-content-between">
+          <div>
+            <span class="text-warning small font-monospace d-block">Transaction Receipt</span>
+            <h4 class="fw-bold text-white mb-0 font-monospace"><%= payment.transactionReference %></h4>
+          </div>
+          <div>
+            <% if (payment.status === 'paid') { %>
+              <span class="badge bg-success px-3 py-2 fs-6 rounded-pill fw-bold">
+                <i class="fa-solid fa-circle-check me-1"></i> PAID
+              </span>
+            <% } else if (payment.status === 'pending') { %>
+              <span class="badge bg-warning text-dark px-3 py-2 fs-6 rounded-pill fw-bold">
+                <i class="fa-solid fa-clock me-1"></i> PENDING
+              </span>
+            <% } else if (payment.status === 'failed') { %>
+              <span class="badge bg-danger px-3 py-2 fs-6 rounded-pill fw-bold">
+                <i class="fa-solid fa-ban me-1"></i> FAILED
+              </span>
+            <% } else { %>
+              <span class="badge bg-secondary px-3 py-2 fs-6 rounded-pill fw-bold uppercase">
+                <%= payment.status %>
+              </span>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+          
+          <!-- Payment Info Grid -->
+          <div class="p-4 bg-light rounded-4 border mb-4">
+            <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">
+              <i class="fa-solid fa-receipt text-primary me-2"></i> Payment Details
+            </h6>
+
+            <div class="row g-3 text-dark small">
+              <div class="col-md-6">
+                <span class="text-muted d-block">Payment ID</span>
+                <strong class="font-monospace text-primary fs-6"><%= payment.paymentId %></strong>
+              </div>
+              <div class="col-md-6">
+                <span class="text-muted d-block">Transaction Reference</span>
+                <strong class="font-monospace text-dark fs-6"><%= payment.transactionReference %></strong>
+              </div>
+              <div class="col-md-4">
+                <span class="text-muted d-block">Total Amount</span>
+                <strong class="text-success fs-4">Rs. <%= payment.amount %></strong>
+              </div>
+              <div class="col-md-4">
+                <span class="text-muted d-block">Payment Method</span>
+                <strong class="text-dark"><%= payment.method %></strong>
+              </div>
+              <div class="col-md-4">
+                <span class="text-muted d-block">Payment Status</span>
+                <strong class="uppercase <%= payment.status === 'paid' ? 'text-success' : 'text-warning' %>"><%= payment.status %></strong>
+              </div>
+              <div class="col-md-6">
+                <span class="text-muted d-block">Transaction Date</span>
+                <strong><%= new Date(payment.createdAt).toLocaleString() %></strong>
+              </div>
+              <% if (payment.paidAt) { %>
+                <div class="col-md-6">
+                  <span class="text-muted d-block">Settled / Paid Date</span>
+                  <strong><%= new Date(payment.paidAt).toLocaleString() %></strong>
+                </div>
+              <% } %>
+            </div>
+          </div>
+
+          <!-- Associated Ride Summary -->
+          <% if (ride) { %>
+            <div class="p-4 bg-white border rounded-4 mb-4">
+              <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">
+                <i class="fa-solid fa-route text-primary me-2"></i> Trip Information
+              </h6>
+              
+              <div class="row g-3 text-dark small">
+                <div class="col-md-6">
+                  <span class="text-muted d-block">Booking Reference</span>
+                  <strong class="font-monospace text-primary fs-6"><%= ride.bookingId %></strong>
+                </div>
+                <div class="col-md-6">
+                  <span class="text-muted d-block">Ride Type & Distance</span>
+                  <strong><%= ride.rideType %> &bull; <%= ride.distance %> KM</strong>
+                </div>
+                <div class="col-md-6">
+                  <span class="text-muted d-block">Pickup Location</span>
+                  <strong><i class="fa-solid fa-circle text-success me-1"></i> <%= ride.pickup.address %></strong>
+                </div>
+                <div class="col-md-6">
+                  <span class="text-muted d-block">Destination</span>
+                  <strong><i class="fa-solid fa-location-dot text-danger me-1"></i> <%= ride.destination.address %></strong>
+                </div>
+                <% if (ride.driver && ride.driver.user) { %>
+                  <div class="col-12 pt-2 border-top">
+                    <span class="text-muted d-block">Assigned Driver</span>
+                    <strong><%= ride.driver.user.fullName %> (<%= ride.driver.user.phone %>)</strong>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+          <% } %>
+
+          <div class="text-center pt-2">
+            <a href="/customer/payments" class="btn btn-secondary rounded-pill px-4 fw-semibold">
+              <i class="fa-solid fa-arrow-left me-1"></i> Return to Payment History
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

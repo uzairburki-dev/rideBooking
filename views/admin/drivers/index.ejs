@@ -1,0 +1,162 @@
+<div class="container py-4 my-md-2">
+  
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+      <h3 class="fw-extrabold text-dark mb-1">Driver Management</h3>
+      <p class="text-muted mb-0">Manage driver fleet accounts, vehicle registrations, and approval statuses</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="/admin/drivers/pending" class="btn btn-warning rounded-pill fw-bold">
+        <i class="fa-solid fa-clock-rotate-left me-1"></i> Pending Queue
+      </a>
+      <a href="/admin/dashboard" class="btn btn-outline-secondary rounded-pill fw-semibold">
+        <i class="fa-solid fa-arrow-left me-1"></i> Dashboard
+      </a>
+    </div>
+  </div>
+
+  <!-- Search & Filter Controls -->
+  <div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
+    <form action="/admin/drivers" method="GET" class="row g-2 align-items-center">
+      <div class="col-12 col-md-6">
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+          <input type="text" name="search" class="form-control border-start-0 bg-light" placeholder="Search by name, email, phone, or license..." value="<%= search %>">
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <select name="status" class="form-select bg-light" onchange="this.form.submit()">
+          <option value="all" <%= currentStatus === 'all' ? 'selected' : '' %>>All Drivers</option>
+          <option value="pending" <%= currentStatus === 'pending' ? 'selected' : '' %>>Pending Approval</option>
+          <option value="approved" <%= currentStatus === 'approved' ? 'selected' : '' %>>Approved Drivers</option>
+          <option value="rejected" <%= currentStatus === 'rejected' ? 'selected' : '' %>>Rejected Applications</option>
+          <option value="active" <%= currentStatus === 'active' ? 'selected' : '' %>>Active Accounts</option>
+          <option value="inactive" <%= currentStatus === 'inactive' ? 'selected' : '' %>>Inactive Accounts</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-2 d-grid">
+        <button type="submit" class="btn btn-primary rounded-pill fw-bold">Filter</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Driver Table Card -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+    <div class="card-header bg-dark text-white p-3 fw-bold border-0 d-flex justify-content-between align-items-center">
+      <span><i class="fa-solid fa-id-card-clip text-warning me-2"></i> Driver Fleet Registry</span>
+      <span class="badge bg-secondary rounded-pill"><%= drivers.length %> Drivers</span>
+    </div>
+
+    <% if (drivers && drivers.length > 0) { %>
+      
+      <!-- DESKTOP TABLE VIEW -->
+      <div class="table-responsive d-none d-md-block">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th scope="col" class="py-3 ps-4">Driver Name</th>
+              <th scope="col" class="py-3">Vehicle Details</th>
+              <th scope="col" class="py-3">Approval Status</th>
+              <th scope="col" class="py-3">Account Status</th>
+              <th scope="col" class="py-3">Rating</th>
+              <th scope="col" class="py-3">Online Status</th>
+              <th scope="col" class="py-3 pe-4 text-end">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% drivers.forEach(function(d) { %>
+              <tr>
+                <td class="ps-4">
+                  <strong class="text-dark d-block"><%= d.user ? d.user.fullName : 'Driver' %></strong>
+                  <small class="text-muted"><%= d.user ? d.user.phone : '' %> &bull; Lic: <%= d.licenseNumber %></small>
+                </td>
+                <td class="small">
+                  <% if (d.vehicle) { %>
+                    <strong><%= d.vehicle.brand %> <%= d.vehicle.model %></strong>
+                    <div class="text-muted font-monospace"><%= d.vehicle.registrationNumber %> (<%= d.vehicle.vehicleType %>)</div>
+                  <% } else { %>
+                    <span class="text-muted">No vehicle registered</span>
+                  <% } %>
+                </td>
+                <td>
+                  <% if (d.isApproved || d.approvalStatus === 'approved') { %>
+                    <span class="badge bg-success-subtle text-success">Approved</span>
+                  <% } else if (d.approvalStatus === 'rejected') { %>
+                    <span class="badge bg-danger-subtle text-danger">Rejected</span>
+                  <% } else { %>
+                    <span class="badge bg-warning-subtle text-warning-emphasis">Pending</span>
+                  <% } %>
+                </td>
+                <td>
+                  <% if (d.user && d.user.isActive) { %>
+                    <span class="badge bg-success-subtle text-success">Active</span>
+                  <% } else { %>
+                    <span class="badge bg-danger-subtle text-danger">Inactive</span>
+                  <% } %>
+                </td>
+                <td class="fw-bold text-dark">
+                  <i class="fa-solid fa-star text-warning me-1"></i><%= d.rating ? d.rating.toFixed(1) : '5.0' %> (<%= d.totalRatings || 0 %>)
+                </td>
+                <td>
+                  <% if (d.driverStatus === 'online') { %>
+                    <span class="badge bg-success-subtle text-success"><i class="fa-solid fa-signal me-1"></i> Online</span>
+                  <% } else { %>
+                    <span class="badge bg-secondary-subtle text-secondary"><i class="fa-solid fa-power-off me-1"></i> Offline</span>
+                  <% } %>
+                </td>
+                <td class="pe-4 text-end">
+                  <a href="/admin/drivers/<%= d._id %>" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-semibold">
+                    Manage
+                  </a>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- MOBILE CARD VIEW -->
+      <div class="d-block d-md-none p-3">
+        <% drivers.forEach(function(d) { %>
+          <div class="card border rounded-3 p-3 mb-3 bg-white">
+            <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+              <span class="fw-bold text-dark"><%= d.user ? d.user.fullName : 'Driver' %></span>
+              <% if (d.isApproved || d.approvalStatus === 'approved') { %>
+                <span class="badge bg-success-subtle text-success">Approved</span>
+              <% } else if (d.approvalStatus === 'rejected') { %>
+                <span class="badge bg-danger-subtle text-danger">Rejected</span>
+              <% } else { %>
+                <span class="badge bg-warning-subtle text-warning-emphasis">Pending</span>
+              <% } %>
+            </div>
+            <div class="mb-2">
+              <div class="small text-muted mb-1"><i class="fa-solid fa-phone me-1"></i> <%= d.user ? d.user.phone : 'N/A' %> | Lic: <%= d.licenseNumber %></div>
+              <% if (d.vehicle) { %>
+                <div class="small text-dark fw-semibold mb-1"><i class="fa-solid fa-car me-1 text-primary"></i> <%= d.vehicle.brand %> <%= d.vehicle.model %> (<%= d.vehicle.registrationNumber %>)</div>
+              <% } %>
+              <div class="small text-muted"><i class="fa-solid fa-star text-warning me-1"></i> Rating: <strong><%= d.rating ? d.rating.toFixed(1) : '5.0' %></strong> (<%= d.totalRatings || 0 %> reviews)</div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-2">
+              <div>
+                <% if (d.driverStatus === 'online') { %>
+                  <span class="badge bg-success-subtle text-success"><i class="fa-solid fa-signal me-1"></i> Online</span>
+                <% } else { %>
+                  <span class="badge bg-secondary-subtle text-secondary"><i class="fa-solid fa-power-off me-1"></i> Offline</span>
+                <% } %>
+              </div>
+              <a href="/admin/drivers/<%= d._id %>" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-semibold">Manage</a>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+
+    <% } else { %>
+      <div class="text-center py-5">
+        <i class="fa-solid fa-id-card text-muted fs-1 mb-2 opacity-50"></i>
+        <h5 class="fw-bold text-dark mb-1">No driver records found</h5>
+        <p class="text-muted mb-0">Adjust your search keyword or filter settings.</p>
+      </div>
+    <% } %>
+  </div>
+
+</div>

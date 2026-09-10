@@ -1,0 +1,118 @@
+<div class="container py-4 my-md-2">
+  
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+      <h3 class="fw-extrabold text-dark mb-1">Customer Management</h3>
+      <p class="text-muted mb-0">View registered customer accounts, ride history, and active statuses</p>
+    </div>
+    <a href="/admin/dashboard" class="btn btn-outline-secondary rounded-pill fw-semibold">
+      <i class="fa-solid fa-arrow-left me-1"></i> Dashboard
+    </a>
+  </div>
+
+  <!-- Search & Filter Controls (Mobile Stacked, Desktop Row) -->
+  <div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
+    <form action="/admin/customers" method="GET" class="row g-2 align-items-center">
+      <div class="col-12 col-md-6">
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+          <input type="text" name="search" class="form-control border-start-0 bg-light" placeholder="Search by name, email, or phone..." value="<%= search %>">
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <select name="status" class="form-select bg-light" onchange="this.form.submit()">
+          <option value="all" <%= currentStatus === 'all' ? 'selected' : '' %>>All Account Statuses</option>
+          <option value="active" <%= currentStatus === 'active' ? 'selected' : '' %>>Active Accounts Only</option>
+          <option value="inactive" <%= currentStatus === 'inactive' ? 'selected' : '' %>>Inactive Accounts Only</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-2 d-grid">
+        <button type="submit" class="btn btn-primary rounded-pill fw-bold">Filter</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Customer Table Card -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+    <div class="card-header bg-dark text-white p-3 fw-bold border-0 d-flex justify-content-between align-items-center">
+      <span><i class="fa-solid fa-users text-info me-2"></i> Registered Customers List</span>
+      <span class="badge bg-secondary rounded-pill"><%= customers.length %> Customers</span>
+    </div>
+
+    <% if (customers && customers.length > 0) { %>
+      
+      <!-- DESKTOP TABLE VIEW -->
+      <div class="table-responsive d-none d-md-block">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th scope="col" class="py-3 ps-4">Customer Name</th>
+              <th scope="col" class="py-3">Contact Email</th>
+              <th scope="col" class="py-3">Phone Number</th>
+              <th scope="col" class="py-3">Status</th>
+              <th scope="col" class="py-3">Total Rides</th>
+              <th scope="col" class="py-3">Joined Date</th>
+              <th scope="col" class="py-3 pe-4 text-end">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% customers.forEach(function(c) { %>
+              <tr>
+                <td class="ps-4 fw-bold text-dark"><%= c.fullName %></td>
+                <td class="text-muted small"><%= c.email %></td>
+                <td class="font-monospace small"><%= c.phone %></td>
+                <td>
+                  <% if (c.isActive) { %>
+                    <span class="badge bg-success-subtle text-success">Active</span>
+                  <% } else { %>
+                    <span class="badge bg-danger-subtle text-danger">Inactive</span>
+                  <% } %>
+                </td>
+                <td class="fw-semibold text-dark"><%= c.totalRides %> rides (<%= c.completedRides %> done)</td>
+                <td class="small text-muted"><%= new Date(c.createdAt).toLocaleDateString() %></td>
+                <td class="pe-4 text-end">
+                  <a href="/admin/customers/<%= c._id %>" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-semibold">
+                    Inspect Profile
+                  </a>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- MOBILE CARD VIEW -->
+      <div class="d-block d-md-none p-3">
+        <% customers.forEach(function(c) { %>
+          <div class="card border rounded-3 p-3 mb-3 bg-white">
+            <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+              <span class="fw-bold text-dark"><%= c.fullName %></span>
+              <% if (c.isActive) { %>
+                <span class="badge bg-success-subtle text-success">Active</span>
+              <% } else { %>
+                <span class="badge bg-danger-subtle text-danger">Inactive</span>
+              <% } %>
+            </div>
+            <div class="mb-2">
+              <div class="small text-muted mb-1"><i class="fa-solid fa-envelope me-1"></i> <%= c.email %></div>
+              <div class="small text-muted mb-1"><i class="fa-solid fa-phone me-1"></i> <%= c.phone %></div>
+              <div class="small fw-semibold text-dark"><i class="fa-solid fa-taxi me-1 text-primary"></i> <%= c.totalRides %> rides (<%= c.completedRides %> done)</div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-2">
+              <small class="text-muted">Joined: <%= new Date(c.createdAt).toLocaleDateString() %></small>
+              <a href="/admin/customers/<%= c._id %>" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-semibold">Inspect</a>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+
+    <% } else { %>
+      <div class="text-center py-5">
+        <i class="fa-solid fa-users-slash text-muted fs-1 mb-2 opacity-50"></i>
+        <h5 class="fw-bold text-dark mb-1">No customers found</h5>
+        <p class="text-muted mb-0">Try adjusting your search query or filter selection.</p>
+      </div>
+    <% } %>
+  </div>
+
+</div>

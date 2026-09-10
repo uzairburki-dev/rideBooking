@@ -1,0 +1,152 @@
+<div class="container py-4 my-md-2">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      
+      <!-- Back Navigation -->
+      <div class="mb-4">
+        <a href="/customer/rides/<%= ride._id %>" class="btn btn-outline-secondary rounded-pill fw-semibold">
+          <i class="fa-solid fa-arrow-left me-1"></i> Back to Ride Details
+        </a>
+      </div>
+
+      <!-- Main Checkout Card -->
+      <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
+        
+        <div class="card-header bg-dark text-white p-4 text-center">
+          <div class="brand-icon-box bg-success text-white rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center" style="width: 54px; height: 54px;">
+            <i class="fa-solid fa-credit-card fs-3"></i>
+          </div>
+          <h3 class="fw-bold text-white mb-1">Ride Fare Checkout</h3>
+          <p class="text-white-80 small mb-0">Booking Reference: <strong class="font-monospace text-warning"><%= ride.bookingId %></strong></p>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+
+          <!-- DEMO SYSTEM DISCLAIMER ALERT -->
+          <div class="alert alert-info border-0 rounded-4 p-3 mb-4 d-flex align-items-center gap-3">
+            <i class="fa-solid fa-shield-halved fs-3 text-info"></i>
+            <div>
+              <h6 class="fw-bold text-dark mb-1">Simulated Demo Payment System</h6>
+              <span class="small text-muted">This is a sandbox demo payment environment. <strong>Do NOT enter real credit card numbers or sensitive personal credentials.</strong></span>
+            </div>
+          </div>
+
+          <!-- RIDE SUMMARY CARD -->
+          <div class="p-3 bg-light rounded-4 border mb-4">
+            <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">
+              <i class="fa-solid fa-route text-primary me-2"></i> Ride Summary
+            </h6>
+            
+            <div class="row g-3">
+              <div class="col-md-6">
+                <span class="text-muted small fw-semibold d-block">Pickup Location</span>
+                <strong class="text-dark small"><i class="fa-solid fa-circle text-success me-1"></i> <%= ride.pickup.address %></strong>
+              </div>
+              <div class="col-md-6">
+                <span class="text-muted small fw-semibold d-block">Destination</span>
+                <strong class="text-dark small"><i class="fa-solid fa-location-dot text-danger me-1"></i> <%= ride.destination.address %></strong>
+              </div>
+              <div class="col-6 col-md-4">
+                <span class="text-muted small fw-semibold d-block">Ride Tier</span>
+                <span class="badge bg-primary text-white uppercase"><%= ride.rideType %></span>
+              </div>
+              <div class="col-6 col-md-4">
+                <span class="text-muted small fw-semibold d-block">Distance</span>
+                <span class="fw-bold text-dark"><%= ride.distance %> KM</span>
+              </div>
+              <div class="col-12 col-md-4 text-md-end">
+                <span class="text-muted small fw-semibold d-block">Total Amount Due</span>
+                <span class="fw-extrabold text-success fs-4">Rs. <%= amount %></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CHECKOUT FORM -->
+          <form action="/customer/payments/<%= ride._id %>/process" method="POST" id="paymentForm">
+            
+            <h6 class="fw-bold text-dark mb-3">Select Payment Method</h6>
+            
+            <div class="row g-3 mb-4">
+              <!-- Demo Card Option -->
+              <div class="col-sm-6">
+                <div class="form-check card-select-box p-3 border rounded-4 bg-light">
+                  <input class="form-check-input" type="radio" name="method" id="methodDemoCard" value="Demo Card" checked>
+                  <label class="form-check-input-label w-100 ps-2" for="methodDemoCard">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <strong class="text-dark"><i class="fa-solid fa-credit-card text-primary me-2"></i> Demo Card</strong>
+                      <i class="fa-brands fa-cc-visa text-primary fs-5"></i>
+                    </div>
+                    <small class="text-muted d-block mt-1">Instant simulated card payment</small>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Cash Option -->
+              <div class="col-sm-6">
+                <div class="form-check card-select-box p-3 border rounded-4 bg-light">
+                  <input class="form-check-input" type="radio" name="method" id="methodCash" value="Cash">
+                  <label class="form-check-input-label w-100 ps-2" for="methodCash">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <strong class="text-dark"><i class="fa-solid fa-money-bill-wave text-success me-2"></i> Cash</strong>
+                      <i class="fa-solid fa-hand-holding-dollar text-success fs-5"></i>
+                    </div>
+                    <small class="text-muted d-block mt-1">Pay driver in cash upon completion</small>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- DEMO CARD INPUT FIELDS -->
+            <div id="demoCardFields" class="p-4 border rounded-4 bg-white mb-4 shadow-sm">
+              <h6 class="fw-bold text-dark mb-3">Simulated Card Details</h6>
+              
+              <div class="mb-3">
+                <label for="cardName" class="form-label fw-semibold text-dark small">Cardholder Name</label>
+                <input type="text" class="form-control rounded-3" id="cardName" name="cardName" placeholder="e.g. John Doe" value="<%= currentUser.fullName %>" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="cardNumber" class="form-label fw-semibold text-dark small">Simulated Card Number</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-credit-card text-muted"></i></span>
+                  <input type="text" class="form-control border-start-0 rounded-end-3 font-monospace" id="cardNumber" name="cardNumber" placeholder="4111 2222 3333 4444" maxlength="19" value="4111 2222 3333 4444" required>
+                </div>
+                <div class="form-text small">Tip: Card ending in <strong>0000</strong> simulates a declined transaction.</div>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-6">
+                  <label for="expiryDate" class="form-label fw-semibold text-dark small">Expiry Date</label>
+                  <input type="text" class="form-control rounded-3 font-monospace" id="expiryDate" name="expiryDate" placeholder="MM/YY" value="12/28" required>
+                </div>
+                <div class="col-6">
+                  <label for="cvv" class="form-label fw-semibold text-dark small">CVV / CVC</label>
+                  <input type="password" class="form-control rounded-3 font-monospace" id="cvv" name="cvv" placeholder="123" maxlength="4" value="123" required>
+                </div>
+              </div>
+            </div>
+
+            <!-- CASH PAYMENT NOTICE -->
+            <div id="cashNoticeFields" class="p-4 border rounded-4 bg-light mb-4 text-center" style="display: none;">
+              <i class="fa-solid fa-hand-holding-dollar text-success display-4 mb-2"></i>
+              <h6 class="fw-bold text-dark mb-1">Cash Payment Requested</h6>
+              <p class="text-muted small mb-0">Please hand the cash fare of <strong>Rs. <%= amount %></strong> directly to your driver upon ride completion.</p>
+            </div>
+
+            <!-- SUBMIT BUTTON -->
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-success btn-lg rounded-pill fw-bold text-white py-3 shadow" id="submitPaymentBtn">
+                <i class="fa-solid fa-lock me-2"></i> Pay Rs. <%= amount %> Now
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="/js/payment.js"></script>

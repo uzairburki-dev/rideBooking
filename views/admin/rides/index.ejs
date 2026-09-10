@@ -1,0 +1,156 @@
+<div class="container py-4 my-md-2">
+  
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+      <h3 class="fw-extrabold text-dark mb-1">Master Ride Log Management</h3>
+      <p class="text-muted mb-0">Monitor system ride bookings, active dispatches, and trip completion statuses</p>
+    </div>
+    <a href="/admin/dashboard" class="btn btn-outline-secondary rounded-pill fw-semibold">
+      <i class="fa-solid fa-arrow-left me-1"></i> Dashboard
+    </a>
+  </div>
+
+  <!-- Search & Filter Controls -->
+  <div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
+    <form action="/admin/rides" method="GET" class="row g-2 align-items-center">
+      <div class="col-12 col-md-4">
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+          <input type="text" name="search" class="form-control border-start-0 bg-light font-monospace" placeholder="Search by Booking ID..." value="<%= search %>">
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <select name="status" class="form-select bg-light" onchange="this.form.submit()">
+          <option value="all" <%= currentStatus === 'all' ? 'selected' : '' %>>All Ride Statuses</option>
+          <option value="requested" <%= currentStatus === 'requested' ? 'selected' : '' %>>Requested (Searching)</option>
+          <option value="accepted" <%= currentStatus === 'accepted' ? 'selected' : '' %>>Accepted</option>
+          <option value="driver_arriving" <%= currentStatus === 'driver_arriving' ? 'selected' : '' %>>Driver En Route</option>
+          <option value="driver_arrived" <%= currentStatus === 'driver_arrived' ? 'selected' : '' %>>Driver Arrived</option>
+          <option value="started" <%= currentStatus === 'started' ? 'selected' : '' %>>Trip Started</option>
+          <option value="completed" <%= currentStatus === 'completed' ? 'selected' : '' %>>Completed</option>
+          <option value="cancelled" <%= currentStatus === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-3">
+        <select name="paymentStatus" class="form-select bg-light" onchange="this.form.submit()">
+          <option value="all" <%= currentPaymentStatus === 'all' ? 'selected' : '' %>>All Payment Statuses</option>
+          <option value="pending" <%= currentPaymentStatus === 'pending' ? 'selected' : '' %>>Pending Payment</option>
+          <option value="paid" <%= currentPaymentStatus === 'paid' ? 'selected' : '' %>>Paid</option>
+          <option value="failed" <%= currentPaymentStatus === 'failed' ? 'selected' : '' %>>Failed Payment</option>
+          <option value="refunded" <%= currentPaymentStatus === 'refunded' ? 'selected' : '' %>>Refunded</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-2 d-grid">
+        <button type="submit" class="btn btn-primary rounded-pill fw-bold">Filter</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Rides Table Card -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+    <div class="card-header bg-dark text-white p-3 fw-bold border-0 d-flex justify-content-between align-items-center">
+      <span><i class="fa-solid fa-route text-primary me-2"></i> System Ride Records</span>
+      <span class="badge bg-secondary rounded-pill"><%= rides.length %> Rides</span>
+    </div>
+
+    <% if (rides && rides.length > 0) { %>
+      
+      <!-- DESKTOP TABLE VIEW -->
+      <div class="table-responsive d-none d-md-block">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th scope="col" class="py-3 ps-4">Booking ID</th>
+              <th scope="col" class="py-3">Customer</th>
+              <th scope="col" class="py-3">Driver</th>
+              <th scope="col" class="py-3">Tier & Distance</th>
+              <th scope="col" class="py-3">Fare</th>
+              <th scope="col" class="py-3">Ride Status</th>
+              <th scope="col" class="py-3">Payment</th>
+              <th scope="col" class="py-3 pe-4 text-end">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% rides.forEach(function(r) { %>
+              <tr>
+                <td class="ps-4 fw-bold font-monospace text-primary"><%= r.bookingId %></td>
+                <td class="fw-semibold text-dark"><%= r.customer ? r.customer.fullName : 'Customer' %></td>
+                <td class="small"><%= (r.driver && r.driver.user) ? r.driver.user.fullName : 'Unassigned' %></td>
+                <td class="small">
+                  <span class="badge bg-primary-subtle text-primary me-1"><%= r.rideType %></span>
+                  <span><%= r.distance %> KM</span>
+                </td>
+                <td class="fw-bold text-success">Rs. <%= r.fare %></td>
+                <td>
+                  <% if (r.status === 'completed') { %>
+                    <span class="badge bg-success-subtle text-success">Completed</span>
+                  <% } else if (r.status === 'cancelled') { %>
+                    <span class="badge bg-danger-subtle text-danger">Cancelled</span>
+                  <% } else if (r.status === 'requested') { %>
+                    <span class="badge bg-warning-subtle text-warning-emphasis">Requested</span>
+                  <% } else { %>
+                    <span class="badge bg-info-subtle text-info uppercase"><%= r.status.replace('_', ' ') %></span>
+                  <% } %>
+                </td>
+                <td>
+                  <% if (r.paymentStatus === 'paid') { %>
+                    <span class="badge bg-success-subtle text-success">Paid</span>
+                  <% } else if (r.paymentStatus === 'pending') { %>
+                    <span class="badge bg-warning-subtle text-warning-emphasis">Pending</span>
+                  <% } else { %>
+                    <span class="badge bg-secondary-subtle text-secondary uppercase"><%= r.paymentStatus %></span>
+                  <% } %>
+                </td>
+                <td class="pe-4 text-end">
+                  <a href="/admin/rides/<%= r._id %>" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-semibold">
+                    Inspect
+                  </a>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- MOBILE CARD VIEW -->
+      <div class="d-block d-md-none p-3">
+        <% rides.forEach(function(r) { %>
+          <div class="card border rounded-3 p-3 mb-3 bg-white">
+            <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+              <span class="fw-bold font-monospace text-primary small"><%= r.bookingId %></span>
+              <% if (r.status === 'completed') { %>
+                <span class="badge bg-success-subtle text-success">Completed</span>
+              <% } else if (r.status === 'cancelled') { %>
+                <span class="badge bg-danger-subtle text-danger">Cancelled</span>
+              <% } else if (r.status === 'requested') { %>
+                <span class="badge bg-warning-subtle text-warning-emphasis">Requested</span>
+              <% } else { %>
+                <span class="badge bg-info-subtle text-info uppercase"><%= r.status.replace('_', ' ') %></span>
+              <% } %>
+            </div>
+            <div class="mb-2">
+              <div class="small fw-semibold text-dark mb-1"><i class="fa-solid fa-user me-1 text-muted"></i> Customer: <%= r.customer ? r.customer.fullName : 'Customer' %></div>
+              <div class="small text-muted mb-1"><i class="fa-solid fa-id-card me-1"></i> Driver: <%= (r.driver && r.driver.user) ? r.driver.user.fullName : 'Unassigned' %></div>
+              <div class="small text-muted mb-1"><i class="fa-solid fa-circle text-success me-1 fs-8"></i> <%= r.pickup.address %> &rarr; <%= r.destination.address %></div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-2">
+              <div>
+                <span class="badge bg-primary-subtle text-primary uppercase me-1"><%= r.rideType %></span>
+                <strong class="text-success small">Rs. <%= r.fare %></strong>
+              </div>
+              <a href="/admin/rides/<%= r._id %>" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-semibold">Inspect</a>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+
+    <% } else { %>
+      <div class="text-center py-5">
+        <i class="fa-solid fa-route text-muted fs-1 mb-2 opacity-50"></i>
+        <h5 class="fw-bold text-dark mb-1">No rides found</h5>
+        <p class="text-muted mb-0">Try adjusting your search filter criteria.</p>
+      </div>
+    <% } %>
+  </div>
+
+</div>

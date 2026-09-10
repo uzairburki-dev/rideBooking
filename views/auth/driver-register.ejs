@@ -1,0 +1,160 @@
+<div class="container py-5 my-md-3">
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      
+      <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <!-- Driver Auth Header -->
+        <div class="card-header bg-dark text-white text-center py-4 border-0">
+          <div class="brand-icon-box bg-warning text-dark rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+            <i class="fa-solid fa-id-card fs-3"></i>
+          </div>
+          <h3 class="fw-bold mb-1">Become a RideGo Driver</h3>
+          <p class="mb-0 text-white-80 small">Register your vehicle and apply to join our professional driver fleet</p>
+        </div>
+
+        <!-- Form Body -->
+        <div class="card-body p-4 p-md-5">
+          <form action="/driver/register" method="POST" id="driverRegisterForm">
+            
+            <!-- SECTION 1: Personal Information -->
+            <div class="mb-4">
+              <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                <i class="fa-solid fa-user me-2"></i> 1. Personal Information
+              </h5>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="fullName" class="form-label fw-semibold text-dark">Full Name</label>
+                  <input type="text" class="form-control bg-light" id="fullName" name="fullName" placeholder="Jane Doe" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="phone" class="form-label fw-semibold text-dark">Phone Number</label>
+                  <input type="tel" class="form-control bg-light" id="phone" name="phone" placeholder="+1 (555) 123-4567" required>
+                </div>
+                <div class="col-12">
+                  <label for="email" class="form-label fw-semibold text-dark">Email Address</label>
+                  <input type="email" class="form-control bg-light" id="email" name="email" placeholder="jane.driver@example.com" required>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION 2: Driver License Information -->
+            <div class="mb-4">
+              <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                <i class="fa-solid fa-id-badge me-2"></i> 2. Driver Credentials
+              </h5>
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="licenseNumber" class="form-label fw-semibold text-dark">Driver's License Number</label>
+                  <input type="text" class="form-control bg-light" id="licenseNumber" name="licenseNumber" placeholder="DL-987654321-X" required>
+                  <div class="form-text text-muted">Must be a valid state or national driver's license number.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION 3: Vehicle Details -->
+            <div class="mb-4">
+              <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                <i class="fa-solid fa-car me-2"></i> 3. Vehicle Information
+              </h5>
+              <div class="row g-3">
+                
+                <div class="col-md-6">
+                  <label for="vehicleType" class="form-label fw-semibold text-dark">Vehicle Class / Tier</label>
+                  <select class="form-select bg-light" id="vehicleType" name="vehicleType" required>
+                    <option value="" disabled selected>Select Ride Tier...</option>
+                    <option value="Economy">Economy (Standard sedan)</option>
+                    <option value="Comfort">Comfort (Newer spacious sedan)</option>
+                    <option value="Premium">Premium (Luxury executive vehicle)</option>
+                    <option value="SUV">SUV (Spacious full-size SUV)</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="registrationNumber" class="form-label fw-semibold text-dark">License Plate / Registration No.</label>
+                  <input type="text" class="form-control bg-light" id="registrationNumber" name="registrationNumber" placeholder="ABC-1234" required>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="brand" class="form-label fw-semibold text-dark">Vehicle Make / Brand</label>
+                  <input type="text" class="form-control bg-light" id="brand" name="brand" placeholder="Toyota, Honda, BMW..." required>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="model" class="form-label fw-semibold text-dark">Vehicle Model</label>
+                  <input type="text" class="form-control bg-light" id="model" name="model" placeholder="Camry, Civic, X5..." required>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="year" class="form-label fw-semibold text-dark">Manufacturing Year</label>
+                  <input type="number" class="form-control bg-light" id="year" name="year" placeholder="2022" min="1990" max="2027" required>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="color" class="form-label fw-semibold text-dark">Vehicle Color</label>
+                  <input type="text" class="form-control bg-light" id="color" name="color" placeholder="Black, Silver, Midnight Blue..." required>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="seats" class="form-label fw-semibold text-dark">Passenger Seats Available</label>
+                  <input type="number" class="form-control bg-light" id="seats" name="seats" placeholder="4" min="1" max="8" required>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- SECTION 4: Account Security -->
+            <div class="mb-4">
+              <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                <i class="fa-solid fa-lock me-2"></i> 4. Account Password
+              </h5>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="password" class="form-label fw-semibold text-dark">Password</label>
+                  <div class="input-group">
+                    <input type="password" class="form-control bg-light border-end-0" id="password" name="password" placeholder="Min. 6 chars" required minlength="6">
+                    <button type="button" class="btn btn-light border border-start-0 text-muted toggle-password" data-target="password">
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="confirmPassword" class="form-label fw-semibold text-dark">Confirm Password</label>
+                  <div class="input-group">
+                    <input type="password" class="form-control bg-light border-end-0" id="confirmPassword" name="confirmPassword" placeholder="Re-enter password" required minlength="6">
+                    <button type="button" class="btn btn-light border border-start-0 text-muted toggle-password" data-target="confirmPassword">
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Terms Checkbox -->
+            <div class="mb-4 form-check">
+              <input type="checkbox" class="form-check-input" id="driverTerms" name="driverTerms" required>
+              <label class="form-check-label text-muted small" for="driverTerms">
+                I certify that all information, license data, and vehicle specifications provided above are accurate. I agree to the RideGo Driver Agreement & Background Check terms.
+              </label>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-dark btn-lg w-100 rounded-pill fw-bold shadow">
+              <i class="fa-solid fa-paper-plane me-2 text-warning"></i> Submit Driver Application
+            </button>
+
+          </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="card-footer bg-light text-center py-3 border-0">
+          <p class="text-muted mb-0 small">
+            Already registered? <a href="/login" class="text-primary fw-bold text-decoration-none">Sign In to Driver Account</a>
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

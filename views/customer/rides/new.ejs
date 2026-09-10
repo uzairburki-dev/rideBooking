@@ -1,0 +1,163 @@
+<div class="container py-4 my-md-2">
+  <div class="row g-4">
+    
+    <!-- LEFT COLUMN: Booking Form -->
+    <div class="col-lg-7">
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        
+        <div class="card-header bg-primary text-white p-4 border-0">
+          <div class="d-flex align-items-center gap-3">
+            <div class="brand-icon-box bg-white text-primary rounded-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+              <i class="fa-solid fa-taxi fs-4"></i>
+            </div>
+            <div>
+              <h3 class="fw-bold mb-0">Book a Ride</h3>
+              <p class="mb-0 text-white-80 small">Select your route and pick your preferred vehicle tier</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+          <form action="/customer/rides" method="POST" id="rideBookingForm">
+            
+            <!-- Hidden coordinates -->
+            <input type="hidden" id="pickupLat" name="pickupLat" value="">
+            <input type="hidden" id="pickupLng" name="pickupLng" value="">
+            <input type="hidden" id="destLat" name="destLat" value="">
+            <input type="hidden" id="destLng" name="destLng" value="">
+
+            <!-- STEP 1: Route Selection -->
+            <div class="mb-4">
+              <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">
+                <i class="fa-solid fa-route text-primary me-2"></i> 1. Enter Route
+              </h5>
+
+              <!-- Pickup Address -->
+              <div class="mb-3">
+                <label for="pickupAddress" class="form-label fw-semibold text-dark">Pickup Location</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light text-success border-end-0"><i class="fa-solid fa-circle"></i></span>
+                  <input type="text" class="form-control bg-light border-start-0" id="pickupAddress" name="pickupAddress" placeholder="e.g. Islamabad F-7" required>
+                </div>
+              </div>
+
+              <!-- Destination Address -->
+              <div class="mb-3">
+                <label for="destinationAddress" class="form-label fw-semibold text-dark">Destination</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light text-danger border-end-0"><i class="fa-solid fa-location-dot"></i></span>
+                  <input type="text" class="form-control bg-light border-start-0" id="destinationAddress" name="destinationAddress" placeholder="e.g. Rawalpindi Saddar" required>
+                </div>
+              </div>
+
+              <!-- Location Quick Presets -->
+              <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
+                <span class="small text-muted fw-semibold">Quick Presets:</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill btn-preset" data-pickup="Islamabad" data-dest="Rawalpindi">
+                  Islamabad &rarr; Rawalpindi
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill btn-preset" data-pickup="Times Square, New York" data-dest="JFK International Airport">
+                  Airport Trip
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 2: Select Ride Type -->
+            <div class="mb-4">
+              <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">
+                <i class="fa-solid fa-car text-primary me-2"></i> 2. Select Vehicle Tier
+              </h5>
+
+              <div class="row g-3" id="rideTypeContainer">
+                
+                <% Object.keys(pricing).forEach(function(type, index) { 
+                     const tier = pricing[type];
+                %>
+                  <div class="col-sm-6">
+                    <input type="radio" class="btn-check" name="rideType" id="tier_<%= type %>" value="<%= type %>" <%= index === 0 ? 'checked' : '' %>>
+                    <label class="btn btn-outline-primary w-100 p-3 rounded-4 text-start ride-tier-card transition-all" for="tier_<%= type %>">
+                      <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="badge bg-primary text-white uppercase fw-bold"><%= type %></span>
+                        <span class="fw-bold fs-5 text-dark fare-display" id="fare_<%= type %>">
+                          Rs. <%= tier.baseFare %>+
+                        </span>
+                      </div>
+                      <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="fa-solid <%= tier.icon %> fs-4 text-primary"></i>
+                        <small class="text-muted"><%= tier.seats %> Passengers</small>
+                      </div>
+                      <p class="text-muted small mb-0 fs-8"><%= tier.description %></p>
+                    </label>
+                  </div>
+                <% }); %>
+
+              </div>
+            </div>
+
+            <!-- STEP 3: Confirm Ride CTA -->
+            <div class="pt-2">
+              <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold py-3 shadow-sm" id="btnConfirmRide">
+                <i class="fa-solid fa-paper-plane me-2"></i> Confirm Booking
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Interactive Summary & Map Preview -->
+    <div class="col-lg-5">
+      
+      <!-- Summary Card -->
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+        <div class="card-header bg-dark text-white p-3 fw-bold">
+          <i class="fa-solid fa-receipt text-warning me-2"></i> Trip Estimate Summary
+        </div>
+        <div class="card-body p-4">
+          
+          <div class="mb-3">
+            <span class="text-muted small fw-semibold d-block">Estimated Distance</span>
+            <h4 class="fw-extrabold text-dark mb-0" id="summaryDistance">-- KM</h4>
+          </div>
+
+          <hr class="text-muted opacity-25">
+
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted small fw-semibold">Selected Tier</span>
+            <span class="badge bg-primary-subtle text-primary uppercase fw-bold" id="summaryTier">Economy</span>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded-3">
+            <span class="fw-bold text-dark">Total Estimated Fare</span>
+            <h3 class="fw-extrabold text-success mb-0" id="summaryFare">Rs. 200</h3>
+          </div>
+
+          <div class="alert alert-info border-0 mb-0 small" id="estimateAlert">
+            <i class="fa-solid fa-circle-info me-1"></i> Distance and fare are calculated using exact location coordinates upon booking.
+          </div>
+        </div>
+      </div>
+
+      <!-- Map Container Placeholder -->
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-header bg-white p-3 fw-bold border-bottom">
+          <i class="fa-solid fa-map-location-dot text-primary me-2"></i> Live Route Map Preview
+        </div>
+        <div class="card-body p-0 bg-secondary bg-opacity-10 position-relative text-center d-flex align-items-center justify-content-center" style="min-height: 250px;">
+          <div class="p-4">
+            <i class="fa-solid fa-map-marked-alt text-primary opacity-50 display-1 mb-2"></i>
+            <h6 class="fw-bold text-dark mb-1">Map Visualization Ready</h6>
+            <p class="text-muted fs-8 mb-0">Supports Google Maps API / Leaflet OSM coordinates integration.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- Load Ride Frontend Script -->
+<script src="/js/ride.js"></script>
