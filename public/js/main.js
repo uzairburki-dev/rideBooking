@@ -25,20 +25,63 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 2. Mobile Dashboard Sidebar Toggle
+  // 2. Mobile Dashboard Sidebar Toggle with Overlay Backdrop
   const openSidebarBtn = document.getElementById('openSidebarBtn');
   const closeSidebarBtn = document.getElementById('closeSidebarBtn');
   const dashboardSidebar = document.getElementById('dashboardSidebar');
 
-  if (openSidebarBtn && dashboardSidebar) {
-    openSidebarBtn.addEventListener('click', () => {
-      dashboardSidebar.classList.add('show-sidebar');
-    });
+  // Create or get existing backdrop
+  let backdrop = document.querySelector('.sidebar-backdrop');
+  if (!backdrop && dashboardSidebar) {
+    backdrop = document.createElement('div');
+    backdrop.className = 'sidebar-backdrop';
+    document.body.appendChild(backdrop);
   }
 
-  if (closeSidebarBtn && dashboardSidebar) {
-    closeSidebarBtn.addEventListener('click', () => {
+  function openSidebar() {
+    if (dashboardSidebar) {
+      dashboardSidebar.classList.add('show-sidebar');
+      if (backdrop) backdrop.classList.add('show');
+      document.body.classList.add('sidebar-open');
+    }
+  }
+
+  function closeSidebar() {
+    if (dashboardSidebar) {
       dashboardSidebar.classList.remove('show-sidebar');
+      if (backdrop) backdrop.classList.remove('show');
+      document.body.classList.remove('sidebar-open');
+    }
+  }
+
+  if (openSidebarBtn) {
+    openSidebarBtn.addEventListener('click', openSidebar);
+  }
+
+  if (closeSidebarBtn) {
+    closeSidebarBtn.addEventListener('click', closeSidebar);
+  }
+
+  if (backdrop) {
+    backdrop.addEventListener('click', closeSidebar);
+  }
+
+  // Close sidebar on ESC key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && dashboardSidebar && dashboardSidebar.classList.contains('show-sidebar')) {
+      closeSidebar();
+    }
+  });
+
+  // Close sidebar when clicking nav links on mobile
+  if (dashboardSidebar) {
+    const navLinks = dashboardSidebar.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth < 992) {
+          closeSidebar();
+        }
+      });
     });
   }
 
