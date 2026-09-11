@@ -51,12 +51,12 @@
           <!-- LIVE STATUS PIPELINE -->
           <div class="mb-4 p-3 bg-light rounded-4 border text-center">
             <h6 class="text-muted small fw-bold mb-2 uppercase">Ride Status Tracker</h6>
-            <div class="d-flex justify-content-between align-items-center position-relative px-3">
-              <span class="badge <%= ['requested', 'accepted', 'driver_arriving', 'driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary' : 'bg-secondary' %>">1. Requested</span>
-              <span class="badge <%= ['accepted', 'driver_arriving', 'driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary' : 'bg-secondary' %>">2. Driver Assigned</span>
-              <span class="badge <%= ['driver_arriving', 'driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary' : 'bg-secondary' %>">3. Driver En Route</span>
-              <span class="badge <%= ['driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary' : 'bg-secondary' %>">4. Driver Arrived</span>
-              <span class="badge <%= ['started', 'completed'].includes(ride.status) ? 'bg-success' : 'bg-secondary' %>">5. On Trip</span>
+            <div class="d-flex flex-wrap justify-content-center align-items-center gap-2 py-1">
+              <span class="badge px-3 py-2 text-nowrap <%= ['requested', 'accepted', 'driver_arriving', 'driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary' : 'bg-secondary' %>">1. Requested</span>
+              <span class="badge px-3 py-2 text-nowrap <%= ['accepted', 'driver_arriving', 'driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary' : 'bg-secondary' %>">2. Driver Assigned</span>
+              <span class="badge px-3 py-2 text-nowrap <%= ['driver_arriving', 'driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary' : 'bg-secondary' %>">3. Driver En Route</span>
+              <span class="badge px-3 py-2 text-nowrap <%= ['driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary' : 'bg-secondary' %>">4. Driver Arrived</span>
+              <span class="badge px-3 py-2 text-nowrap <%= ['started', 'completed'].includes(ride.status) ? 'bg-success' : 'bg-secondary' %>">5. On Trip</span>
             </div>
           </div>
 

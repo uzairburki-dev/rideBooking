@@ -29,29 +29,29 @@
             <!-- STATUS PROGRESSION PIPELINE -->
             <div class="mb-5">
               <h6 class="text-muted small fw-bold mb-3 uppercase tracking-wider">Trip Progression Pipeline</h6>
-              <div class="row text-center g-2">
+              <div class="row text-center g-1 g-sm-2">
                 <div class="col-3">
-                  <div class="p-2 rounded-3 <%= ['accepted', 'driver_arriving', 'driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary text-white' : 'bg-light text-muted' %>">
+                  <div class="py-2 px-1 rounded-3 <%= ['accepted', 'driver_arriving', 'driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary text-white' : 'bg-light text-muted' %>">
                     <i class="fa-solid fa-check-circle d-block mb-1"></i>
-                    <small class="fw-bold fs-8">Accepted</small>
+                    <small class="fw-bold d-block text-nowrap" style="font-size: 0.72rem;">Accepted</small>
                   </div>
                 </div>
                 <div class="col-3">
-                  <div class="p-2 rounded-3 <%= ['driver_arriving', 'driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary text-white' : 'bg-light text-muted' %>">
+                  <div class="py-2 px-1 rounded-3 <%= ['driver_arriving', 'driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary text-white' : 'bg-light text-muted' %>">
                     <i class="fa-solid fa-car-side d-block mb-1"></i>
-                    <small class="fw-bold fs-8">En Route</small>
+                    <small class="fw-bold d-block text-nowrap" style="font-size: 0.72rem;">En Route</small>
                   </div>
                 </div>
                 <div class="col-3">
-                  <div class="p-2 rounded-3 <%= ['driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary text-white' : 'bg-light text-muted' %>">
+                  <div class="py-2 px-1 rounded-3 <%= ['driver_arrived', 'started', 'completed'].includes(ride.status) ? 'bg-primary text-white' : 'bg-light text-muted' %>">
                     <i class="fa-solid fa-street-view d-block mb-1"></i>
-                    <small class="fw-bold fs-8">Arrived</small>
+                    <small class="fw-bold d-block text-nowrap" style="font-size: 0.72rem;">Arrived</small>
                   </div>
                 </div>
                 <div class="col-3">
-                  <div class="p-2 rounded-3 <%= ['started', 'completed'].includes(ride.status) ? 'bg-success text-white' : 'bg-light text-muted' %>">
+                  <div class="py-2 px-1 rounded-3 <%= ['started', 'completed'].includes(ride.status) ? 'bg-success text-white' : 'bg-light text-muted' %>">
                     <i class="fa-solid fa-flag-checkered d-block mb-1"></i>
-                    <small class="fw-bold fs-8">Started</small>
+                    <small class="fw-bold d-block text-nowrap" style="font-size: 0.72rem;">Started</small>
                   </div>
                 </div>
               </div>
