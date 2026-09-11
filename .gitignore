@@ -21,3 +21,6 @@ uploads/
 coverage/
 .vscode/
 .idea/
+
+.vercel
+scratch/
