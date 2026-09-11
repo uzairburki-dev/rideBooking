@@ -1,34 +1,39 @@
 const mongoose = require('mongoose');
 
-let cachedPromise = null;
+let connPromise = null;
 
 const connectDB = async () => {
   if (!process.env.MONGODB_URI) {
     console.warn(`[Database Warning] MONGODB_URI is not set. Please configure MONGODB_URI environment variable.`);
-    return;
+    return null;
   }
 
-  // If connection is already open, reuse it
+  // Reuse active connection if open
   if (mongoose.connection.readyState >= 1) {
     return mongoose.connection;
   }
 
-  // Cache the connection promise to prevent duplicate connections during simultaneous serverless invocations
-  if (!cachedPromise) {
-    cachedPromise = mongoose.connect(process.env.MONGODB_URI, {
-      bufferCommands: false,
-      serverSelectionTimeoutMS: 5000
+  if (!connPromise) {
+    connPromise = mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 10000
     }).then(m => {
       console.log(`[Database] MongoDB Connected Successfully: ${m.connection.host}`);
       return m;
     }).catch(err => {
-      cachedPromise = null;
+      connPromise = null;
       console.error(`[Database Error] Failed to connect to MongoDB: ${err.message}`);
       throw err;
     });
   }
 
-  return cachedPromise;
+  return connPromise;
 };
 
-module.exports = connectDB;
+const getClientPromise = () => {
+  if (!process.env.MONGODB_URI) return Promise.resolve(null);
+  return connectDB().then(conn => {
+    return conn ? conn.connection.getClient() : null;
+  }).catch(() => null);
+};
+
+module.exports = { connectDB, getClientPromise };

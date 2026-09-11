@@ -67,18 +67,21 @@ app.use(express.urlencoded({ extended: true }));
 // Method Override Middleware for RESTful actions
 app.use(methodOverride('_method'));
 
-// Trust reverse proxy (Vercel / Heroku / Nginx) in production
-if (process.env.NODE_ENV === 'production') {
+// Trust reverse proxy (Vercel / Heroku / Nginx) in production or Vercel
+if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
   app.set('trust proxy', 1);
 }
 
 // Session Configuration with MongoStore
+const { getClientPromise } = require('./config/db');
+
 const sessionConfig = {
   secret: process.env.SESSION_SECRET || 'ridego_default_secret_key',
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
+    sameSite: 'lax',
     secure: process.env.COOKIE_SECURE === 'true',
     maxAge: 1000 * 60 * 60 * 24 // 1 day
   }
@@ -86,7 +89,7 @@ const sessionConfig = {
 
 if (process.env.MONGODB_URI) {
   sessionConfig.store = MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI,
+    clientPromise: getClientPromise(),
     touchAfter: 24 * 3600 // lazy update session once per day
   });
 }
