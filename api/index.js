@@ -1,11 +1,15 @@
 const app = require('../app');
 const { connectDB } = require('../config/db');
 
-module.exports = async (req, res) => {
+// Ensure MongoDB connection is initialized for every Vercel serverless request
+app.use(async (req, res, next) => {
   try {
     await connectDB();
+    next();
   } catch (error) {
     console.error('[Vercel Serverless DB Error]:', error);
+    next(error);
   }
-  return app(req, res);
-};
+});
+
+module.exports = app;

@@ -56,16 +56,22 @@ exports.postLogin = async (req, res, next) => {
 
     req.flash('success', `Welcome back, ${user.fullName}!`);
 
-    // Redirect according to role
-    if (user.role === 'customer') {
-      return res.redirect('/customer/dashboard');
-    } else if (user.role === 'driver') {
-      return res.redirect('/driver/dashboard');
-    } else if (user.role === 'admin') {
-      return res.redirect('/admin/dashboard');
-    }
+    // Explicitly save session before redirecting for Vercel serverless compatibility
+    return req.session.save((err) => {
+      if (err) {
+        console.error('[Session Save Error]:', err);
+      }
+      // Redirect according to role
+      if (user.role === 'customer') {
+        return res.redirect('/customer/dashboard');
+      } else if (user.role === 'driver') {
+        return res.redirect('/driver/dashboard');
+      } else if (user.role === 'admin') {
+        return res.redirect('/admin/dashboard');
+      }
 
-    return res.redirect('/dashboard');
+      return res.redirect('/dashboard');
+    });
 
   } catch (error) {
     console.error('[Login Error]:', error);
@@ -245,13 +251,25 @@ exports.postDriverRegister = async (req, res, next) => {
  * Handle Logout
  */
 exports.postLogout = (req, res, next) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error('[Logout Error]:', err);
-    }
-    res.clearCookie('connect.sid');
-    return res.redirect('/login');
-  });
+  const cookieOptions = {
+    path: '/',
+    httpOnly: true,
+    secure: process.env.COOKIE_SECURE === 'true',
+    sameSite: 'lax'
+  };
+
+  if (req.session) {
+    return req.session.destroy((err) => {
+      if (err) {
+        console.error('[Logout Error]:', err);
+      }
+      res.clearCookie('connect.sid', cookieOptions);
+      return res.redirect('/login');
+    });
+  }
+
+  res.clearCookie('connect.sid', cookieOptions);
+  return res.redirect('/login');
 };
 
 /**

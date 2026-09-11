@@ -29,7 +29,7 @@ exports.isGuest = (req, res, next) => {
  * Ensures user has Customer role
  */
 exports.isCustomer = (req, res, next) => {
-  if (req.session.user && req.session.user.role === 'customer') {
+  if (req.session && req.session.user && req.session.user.role === 'customer') {
     return next();
   }
   req.flash('error', 'Access denied. Customer account required.');
@@ -40,7 +40,7 @@ exports.isCustomer = (req, res, next) => {
  * Ensures user has Driver role
  */
 exports.isDriver = (req, res, next) => {
-  if (req.session.user && req.session.user.role === 'driver') {
+  if (req.session && req.session.user && req.session.user.role === 'driver') {
     return next();
   }
   req.flash('error', 'Access denied. Driver account required.');
@@ -51,7 +51,7 @@ exports.isDriver = (req, res, next) => {
  * Ensures user has Admin role
  */
 exports.isAdmin = (req, res, next) => {
-  if (req.session.user && req.session.user.role === 'admin') {
+  if (req.session && req.session.user && req.session.user.role === 'admin') {
     return next();
   }
   req.flash('error', 'Access denied. Administrator privileges required.');
@@ -63,7 +63,7 @@ exports.isAdmin = (req, res, next) => {
  */
 exports.isApprovedDriver = async (req, res, next) => {
   try {
-    if (req.session.user && req.session.user.role === 'driver') {
+    if (req.session && req.session.user && req.session.user.role === 'driver') {
       const driver = await Driver.findOne({ user: req.session.user._id }).populate('vehicle');
       if (!driver) {
         req.flash('error', 'Driver profile not found.');
@@ -94,6 +94,10 @@ exports.isApprovedDriver = async (req, res, next) => {
  */
 exports.isOnlineDriver = async (req, res, next) => {
   try {
+    if (!req.session || !req.session.user) {
+      req.flash('error', 'Please log in as a driver.');
+      return res.redirect('/login');
+    }
     const driver = req.driverInfo || await Driver.findOne({ user: req.session.user._id });
     if (!driver || driver.driverStatus !== 'online') {
       req.flash('error', 'Please go online before managing ride requests.');
@@ -110,7 +114,7 @@ exports.isOnlineDriver = async (req, res, next) => {
  */
 exports.checkDriverApproval = async (req, res, next) => {
   try {
-    if (req.session.user && req.session.user.role === 'driver') {
+    if (req.session && req.session.user && req.session.user.role === 'driver') {
       const driver = await Driver.findOne({ user: req.session.user._id }).populate('vehicle');
       req.driverInfo = driver;
       res.locals.driverInfo = driver;
